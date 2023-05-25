@@ -67,7 +67,7 @@ namespace EvaluationSystem.Services
         }
 
         //根据用户姓名查找用户
-        public List<User> QueryUser(string username)
+        public List<User> QueryUserByName(string username)
         {
             var query = dbContext.Users
                 .Where(user => user.Name == username);
@@ -75,7 +75,7 @@ namespace EvaluationSystem.Services
         }
 
         //根据用户类型查找用户
-        public List<User> QueryUser(int type)
+        public List<User> QueryUserByType(int type)
         {
             var query = dbContext.Users
                 .Where (user => user.Type == type);
@@ -126,7 +126,7 @@ namespace EvaluationSystem.Services
                 switch (user.Type)
                 {
                     case 0:
-                        var stu=dbContext.Students.FirstOrDefault(x=>x.StuId == id);
+                        var stu=dbContext.Students.FirstOrDefault(x=>x.UserId == id);
                         if(stu!=null)
                         {
                             dbContext.Students.Remove(stu);
@@ -134,7 +134,7 @@ namespace EvaluationSystem.Services
                         }
                         break;
                     case 1:
-                        var tutor = dbContext.Tutors.FirstOrDefault(x => x.TutorId == id);
+                        var tutor = dbContext.Tutors.FirstOrDefault(x => x.UserId == id);
                         if (tutor != null)
                         {
                             dbContext.Tutors.Remove(tutor);
@@ -142,7 +142,7 @@ namespace EvaluationSystem.Services
                         }
                         break;
                     case 2:
-                        var superAdmin = dbContext.SuperAdmins.FirstOrDefault(x => x.SuperAdminId == id);
+                        var superAdmin = dbContext.SuperAdmins.FirstOrDefault(x => x.UserId == id);
                         if (superAdmin != null)
                         {
                             dbContext.SuperAdmins.Remove(superAdmin);
@@ -152,11 +152,25 @@ namespace EvaluationSystem.Services
                     default:
                         break;
                 }
-
-                
-
-
             }
+        }
+        //修改用户具体信息
+        public void ModifyInfo(StudentInfo studentInfo)
+        {
+            DeleteInfo(studentInfo.UserId);
+            AddInfo(studentInfo);
+        }
+
+        public void ModifyInfo(TutorInfo tutorInfo)
+        {
+            DeleteInfo(tutorInfo.UserId);
+            AddInfo(tutorInfo);
+        }
+
+        public void ModifyInfo(SuperAdminInfo superAdminInfo)
+        {
+            DeleteInfo (superAdminInfo.UserId);
+            AddInfo(superAdminInfo);
         }
 
 

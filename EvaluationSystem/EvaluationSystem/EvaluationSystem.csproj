@@ -12,4 +12,14 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="VUE\file\" />
+    <Folder Include="VUE\html\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\file\whu.png" />
+    <None Include="wwwroot\index.html" />
+  </ItemGroup>
+
 </Project>

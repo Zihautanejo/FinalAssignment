@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <script src="../js/vue.js"></script>
+    <script src="../js/axios.min.js"></script>
+    <script src="../js/el-ui.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+<body>
+    <div id="indexPage">
+        <div class="top" style="position:absolute;width:1503px;height: 78px;background-color:#C5CFC4">
+            <div class="logo" style="position: absolute;left:0px;top: 0px;width: 241px;height: 78px;">
+                <img src="./file/whu.png" alt="whu" style="position: absolute;width: 53px;height: 50px;left:21px;top: 15px;">
+                <h1 style="font-size:20px;position: absolute;left: 88px;top: 20px;width: 112px;height: 30px;color: #797979;">掌上综测</h1>
+            </div>
+        </div>
+        <div class="center" style="text-align:center;position:absolute;left:501px;top:125px;width:500px;height:500px;background-color: #E6E6E6;">
+            <h1>登录</h1>
+            账号：
+            <input type="text" placeholder="请输入账号" v-model="account">
+            <br>
+            <br>
+            密码：
+            <input type="password" placeholder="请输入密码" v-model="password">
+            <br>
+            <br>
+            用户类型：
+            <input type="radio" name="type" checked v-model="stype">学生
+            <input type="radio" name="type" v-model="stype">辅导员
+            <input type="radio" name="type" v-model="stype">超级管理员
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <button @click="jump">登录</button>
+        </div>
+
+    </div>
+
+    <script>
+        var vue = new Vue({
+            el: '#indexPage',
+            data: {
+                account: "",
+                password: "",
+                stype: "",
+                type: 0,
+                user: "",
+            },
+            methods: {
+                getNum: function (stype) {
+                    if (stype == "学生") this.type = 0;
+                    else if (stype == "辅导员") this.type = 1;
+                    else this.type = 2;
+                },
+                login: function (account, password, type) {
+                    var path = '/api/User';
+                    if (account != null) path = path + "?id=" + this.account + "&pwd=" + this.password + "&type=" + this.type
+                    axios.get(path)
+                        .then(response => this.user = response.data)
+                        .catch(e => this.$message.error(e.response.data))
+                    
+                },
+                jump: function () {
+
+                    vue.login(this.account, this.password, this.type)
+                    if (this.user != "") {
+                        if (this.type == 0) {
+                            window.location.href = '/student.html'
+                        }
+
+                    }
+                },
+                /*login: function (account, password, type) {
+                    var path = '/api/User';
+                    if (account != null) path = path + "?id=" + this.account + "&pwd=" + this.password + "&type=" + this.type
+                    axios.get(path)
+                        .then(response => this.user = response.data)
+                        .catch(e => this.$message.error(e.response.data))
+                    vue.jump()
+                }*/
+            }
+
+               
+
+
+
+
+
+          
+        })
+
+    </script>
+   
+</body>
+</html>

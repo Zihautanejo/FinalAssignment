@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace EvaluationSystem.Models
 {
     public class StudentInfo
     {
-        public string StuId { get; set; }
+        [Key]
+        public string UserId { get; set; }
         public string College { get; set; }
         public string Major { get; set; }
         public int Semester { get; set; }
@@ -15,7 +17,7 @@ namespace EvaluationSystem.Models
 
         public StudentInfo(string UserId, string College, string Major, int Semester, string grade,/*Transcript transcript,*/string ClassId, string TutorId)
         {
-            this.StuId = UserId;
+            this.UserId = UserId;
             this.College = College;
             this.Major = Major;
             this.Semester = Semester;

@@ -1,13 +1,16 @@
-﻿namespace EvaluationSystem.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EvaluationSystem.Models
 {
     public class SuperAdminInfo
     {
-        public string SuperAdminId { get; set; }
+        [Key]
+        public string UserId { get; set; }
         public string PwdAnswer { get; set; }
         public string PwdQues { get; set; }
         public SuperAdminInfo(string UserId, string PwdAnswer, string PwdQues)
         {
-            this.SuperAdminId = UserId;
+            this.UserId = UserId;
             this.PwdAnswer = PwdAnswer;
             this.PwdQues = PwdQues;
         }

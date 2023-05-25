@@ -10,10 +10,10 @@ namespace EvaluationSystem.Models
 
         public string Sex { get; set; }
 
-        //用户类型 0超管 1辅导员 2超管
+        //用户类型
         public int Type { get; set; }
 
-        public User(string UserId,string Name,string Pwd,string Sex, int Type) 
+        public User(string UserId,string Name,string Pwd,string Sex,int Type) 
         {
             this.UserId = UserId;
             this.Name = Name;

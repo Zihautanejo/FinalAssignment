@@ -1,8 +1,12 @@
-﻿namespace EvaluationSystem.Models
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
+
+namespace EvaluationSystem.Models
 {
     public class TutorInfo
     {
-        public string TutorId { get; set; }
+        [Key]
+        public string UserId { get; set; }
         //所在学校
         public string College { get; set; }
         //所属系
@@ -15,7 +19,7 @@
         //public List<Class> classes = new List<Class>();
         public TutorInfo(string userId, string College, string Major, int Semester, string grade/*,List<CLass> classes*/)
         {
-            this.TutorId = userId;
+            this.UserId = userId;
             this.College = College;
             this.Major = Major;
             this.Semester = Semester;
