@@ -242,16 +242,49 @@ namespace EvaluationSystem.Controllers
             }
         }
 
+        //查找用户信息
+        [HttpGet("stu")]
+        public ActionResult<StudentInfo> GetStudentInfo(string id)
+        {
+            var studentinfo = userService.QueryStuInfo(id);
+            if(studentinfo==null)
+            {
+                return BadRequest("不存在该用户信息！");
+            }
+            return studentinfo;
+        }
 
-       
+        [HttpGet("tutor")]
+        public ActionResult<TutorInfo> GetTutorInfo(string id)
+        {
+            var tutorinfo = userService.QueryTutorInfo(id);
+            if (tutorinfo == null)
+            {
+                return BadRequest("不存在该用户信息！");
+            }
+            return tutorinfo;
+        }
+        [HttpGet("SuperAdmin")]
+        public ActionResult<SuperAdminInfo> GetSuperAdminInfo(string id)
+        {
+            var superadmininfo = userService.QuerySuperAdminInfo(id);
+            if (superadmininfo == null)
+            {
+                return BadRequest("不存在该用户信息！");
+            }
+            return superadmininfo;
+        }
 
 
-        
 
 
-        
 
-        
+
+
+
+
+
+
 
 
 

@@ -15,7 +15,7 @@
 </head>
 <body>
     <div id="indexPage">
-        <div class="top" style="position:absolute;width:1503px;height: 78px;background-color:#C5CFC4">
+        <div class="top" style="position:absolute;border:#797979;left:0px;top:0px;width:1503px;height: 78px;background-color:#C5CFC4">
             <div class="logo" style="position: absolute;left:0px;top: 0px;width: 241px;height: 78px;">
                 <img src="./file/whu.png" alt="whu" style="position: absolute;width: 53px;height: 50px;left:21px;top: 15px;">
                 <h1 style="font-size:20px;position: absolute;left: 88px;top: 20px;width: 112px;height: 30px;color: #797979;">掌上综测</h1>
@@ -41,12 +41,13 @@
             <br>
             <br>
             <br>
-            <button @click="jump">登录</button>
+            <button @click="login">登录</button>
         </div>
 
     </div>
 
     <script>
+        
         var vue = new Vue({
             el: '#indexPage',
             data: {
@@ -67,15 +68,18 @@
                     if (account != null) path = path + "?id=" + this.account + "&pwd=" + this.password + "&type=" + this.type
                     axios.get(path)
                         .then(response => this.user = response.data)
-                        .catch(e => this.$message.error(e.response.data))
+                        .catch(e => this.$message.error(e.response.data));
+                     vue.jump();
                     
                 },
                 jump: function () {
 
-                    vue.login(this.account, this.password, this.type)
+                    // vue.login(vue.account,vue.password,vue.type);
                     if (this.user != "") {
                         if (this.type == 0) {
-                            window.location.href = '/student.html'
+                            //   window.location.href = '/student_selfinfo.html'
+                        //   self.router.push({path:'/stu_selfinfo.html',query:{account: this.account}})
+                        window.location.href = '/stu_selfinfo.html?'+'account='+this.account
                         }
 
                     }
@@ -97,8 +101,8 @@
 
 
           
-        })
-
+        })            
+        
     </script>
    
 </body>

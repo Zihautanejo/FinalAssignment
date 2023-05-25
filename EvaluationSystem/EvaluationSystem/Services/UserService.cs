@@ -173,6 +173,23 @@ namespace EvaluationSystem.Services
             AddInfo(superAdminInfo);
         }
 
+        //查找信息
+        public StudentInfo QueryStuInfo(string id)
+        {
+          
+            return dbContext.Students.FirstOrDefault(s => s.UserId == id);
+        }
+
+        public TutorInfo QueryTutorInfo(string id)
+        {
+            return dbContext.Tutors.FirstOrDefault(t => t.UserId == id);
+        }
+
+        public SuperAdminInfo QuerySuperAdminInfo(string id)
+        {
+            return dbContext.SuperAdmins.FirstOrDefault(s => s.UserId == id);
+        }
+
 
 
     }
