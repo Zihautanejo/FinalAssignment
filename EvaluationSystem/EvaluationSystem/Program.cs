@@ -17,8 +17,11 @@ namespace todo_api
             builder.Services.AddSwaggerGen();
             //把DbContext加入到容器
             builder.Services.AddDbContext<UserDbContext>(opt => opt.UseMySQL(
-                "Server=localhost;Database=EvaSystemDB;User=root;Password=abcd181818"));
-
+                "Server=localhost;Database=EvaSystemDB;User=root;Password=3306"));
+            builder.Services.AddDbContext<ComEvaDbContext>(opt => opt.UseMySQL(
+                "Server=localhost;Database=EvaSystemDB;User=root;Password=3306"));
+            builder.Services.AddDbContext<ExtBenDbContext>(opt => opt.UseMySQL(
+                "Server=localhost;Database=EvaSystemDB;User=root;Password=3306"));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
