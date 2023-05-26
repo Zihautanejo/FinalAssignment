@@ -1,0 +1,61 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\大学资料\\软件构造基础\\大作业\\code\\FinalAssignment\\EvaluationSystem-edition4\\EvaluationSystem\\wwwroot\\extra_benefit.html",
+      "PackagePath": "staticwebassets\\extra_benefit.html"
+    },
+    {
+      "Id": "D:\\大学资料\\软件构造基础\\大作业\\code\\FinalAssignment\\EvaluationSystem-edition4\\EvaluationSystem\\wwwroot\\file\\message.png",
+      "PackagePath": "staticwebassets\\file\\message.png"
+    },
+    {
+      "Id": "D:\\大学资料\\软件构造基础\\大作业\\code\\FinalAssignment\\EvaluationSystem-edition4\\EvaluationSystem\\wwwroot\\file\\photo.jpg",
+      "PackagePath": "staticwebassets\\file\\photo.jpg"
+    },
+    {
+      "Id": "D:\\大学资料\\软件构造基础\\大作业\\code\\FinalAssignment\\EvaluationSystem-edition4\\EvaluationSystem\\wwwroot\\file\\whu.png",
+      "PackagePath": "staticwebassets\\file\\whu.png"
+    },
+    {
+      "Id": "D:\\大学资料\\软件构造基础\\大作业\\code\\FinalAssignment\\EvaluationSystem-edition4\\EvaluationSystem\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "D:\\大学资料\\软件构造基础\\大作业\\code\\FinalAssignment\\EvaluationSystem-edition4\\EvaluationSystem\\wwwroot\\stu_eva.html",
+      "PackagePath": "staticwebassets\\stu_eva.html"
+    },
+    {
+      "Id": "D:\\大学资料\\软件构造基础\\大作业\\code\\FinalAssignment\\EvaluationSystem-edition4\\EvaluationSystem\\wwwroot\\stu_mark.html",
+      "PackagePath": "staticwebassets\\stu_mark.html"
+    },
+    {
+      "Id": "D:\\大学资料\\软件构造基础\\大作业\\code\\FinalAssignment\\EvaluationSystem-edition4\\EvaluationSystem\\wwwroot\\stu_message.html",
+      "PackagePath": "staticwebassets\\stu_message.html"
+    },
+    {
+      "Id": "D:\\大学资料\\软件构造基础\\大作业\\code\\FinalAssignment\\EvaluationSystem-edition4\\EvaluationSystem\\wwwroot\\stu_selfinfo.html",
+      "PackagePath": "staticwebassets\\stu_selfinfo.html"
+    },
+    {
+      "Id": "D:\\大学资料\\软件构造基础\\大作业\\code\\FinalAssignment\\EvaluationSystem-edition4\\EvaluationSystem\\wwwroot\\student.html",
+      "PackagePath": "staticwebassets\\student.html"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.EvaluationSystem.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.EvaluationSystem.props",
+      "PackagePath": "build\\EvaluationSystem.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.EvaluationSystem.props",
+      "PackagePath": "buildMultiTargeting\\EvaluationSystem.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.EvaluationSystem.props",
+      "PackagePath": "buildTransitive\\EvaluationSystem.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

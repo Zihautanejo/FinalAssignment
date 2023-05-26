@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions;
 using EvaluationSystem.DAO;
@@ -17,7 +16,7 @@ namespace todo_api
             builder.Services.AddSwaggerGen();
             //把DbContext加入到容器
             builder.Services.AddDbContext<UserDbContext>(opt => opt.UseMySQL(
-                "Server=localhost;Database=EvaSystemDB;User=root;Password=abcd181818"));
+                "Server=localhost;Database=EvaSystemDB;User=root;Password=112648"));
 
             var app = builder.Build();
 

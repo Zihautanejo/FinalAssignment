@@ -24,7 +24,7 @@ namespace EvaluationSystem.Models
         //学生成绩
         public int stuMark { get; set; }
         //修读学期
-        public int courseTakeSemester { get; set; }
+        public string courseTakeSemester { get; set; }
         //是否挂科
         public bool isFailed { get; set; }
         //是否重修
@@ -33,7 +33,7 @@ namespace EvaluationSystem.Models
         public int stuGradePoint { get; set; }
 
         public StudentCourseMark(string courseName, string courseType, double coursePoint, string courseId,
-            string UserId, int stuMark, int courseTakeSemester, bool isFailed, bool isRetook,int stuGradePoint)
+            string UserId, int stuMark, string courseTakeSemester, bool isFailed, bool isRetook,int stuGradePoint)
         {
             this.courseName = courseName;
             this.courseType = courseType;

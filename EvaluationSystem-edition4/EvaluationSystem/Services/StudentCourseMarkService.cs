@@ -4,6 +4,7 @@ using System.ComponentModel;
 using OfficeOpenXml;
 using System.IO;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace EvaluationSystem.Services
 {
@@ -12,14 +13,18 @@ namespace EvaluationSystem.Services
         void ImportStudentCourseMark(IFormFile file);
         List<StudentCourseMark> GetStudentCourseMark(string userId, string semester);
         List<StudentCourseMark> QueryStudentCourseMarkById(int Id);
+        void SaveStudentCourseMark(List<StudentCourseMark> scmark);
+
+
     }
     public class StudentCourseMarkService: IStudentCourseMarkService
     {
         private readonly IStudentCourseMarkService _scmarkDao;
+        StudentCourseMarkDbContext _dbContext;
 
-        public StudentCourseMarkService(IStudentCourseMarkDao scmarkDao)
+        public StudentCourseMarkService(StudentCourseMarkDbContext dbContext)
         {
-            _scmarkDao = (IStudentCourseMarkService?)scmarkDao;
+            _dbContext = dbContext;
         }
 
         public void ImportStudentCourseMark(IFormFile file)
@@ -54,14 +59,21 @@ namespace EvaluationSystem.Services
         }
         public List<StudentCourseMark> GetStudentCourseMark(string userId, string semester)
         {
-            var grades = _scmarkDao.GetStudentCourseMark(userId, semester);
-            return grades;
+            var scmark = _dbContext.StudentCourseMark.Where(x => x.UserId == userId && x.courseTakeSemester == semester);
+            return scmark.ToList();
         }
 
         public List<StudentCourseMark> QueryStudentCourseMarkById(int Id)
         {
-            var grades = _scmarkDao.QueryStudentCourseMarkById(Id);
-            return grades;
+            var scmark = _dbContext.StudentCourseMark.Where(x => x.Id == Id);
+            return scmark.ToList();
+        }
+
+        public void SaveStudentCourseMark(List<StudentCourseMark> scmark)
+        {
+            // 保存成绩到数据库
+            _dbContext.StudentCourseMark.AddRange(scmark);
+            _dbContext.SaveChanges();
         }
     }
 
