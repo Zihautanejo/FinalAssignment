@@ -9,5 +9,12 @@ namespace EvaluationSystem.Services
         {
             this.dbContext = dbContext;
         }
+
+        public double CalculateGPA(string userId)
+        {
+            double GPA=0;
+            //待补充
+            return GPA;
+        }
     }
 }

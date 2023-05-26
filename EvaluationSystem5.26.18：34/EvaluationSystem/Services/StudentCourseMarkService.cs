@@ -5,13 +5,15 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace EvaluationSystem.Services
 {
     public interface IStudentCourseMarkService
     {
         void ImportStudentCourseMark(IFormFile file);
-        List<StudentCourseMark> GetStudentCourseMark(string userId, string semester);
+        List<StudentCourseMark> GetStudentCourseMark(string userId,string grade, string semester);
         List<StudentCourseMark> QueryStudentCourseMarkById(int Id);
         void SaveStudentCourseMark(List<StudentCourseMark> scmark);
 
@@ -57,18 +59,23 @@ namespace EvaluationSystem.Services
             _scmarkDao.SaveStudentCourseMark(studentCourseMarks);
             */
         }
-        public List<StudentCourseMark> GetStudentCourseMark(string userId, string semester)
+        public List<StudentCourseMark> GetStudentCourseMark(string userId, string grade, string semester)
         {
-            var scmark = _dbContext.StudentCourseMark.Where(x => x.UserId == userId && x.courseTakeSemester == semester);
+            var scmark = _dbContext.StudentCourseMark.Where(x => x.UserId == userId && x.semester == semester && x.grade == grade);
             return scmark.ToList();
         }
-
+        //根据选中的选修课id查询选修课
         public List<StudentCourseMark> QueryStudentCourseMarkById(int Id)
         {
             var scmark = _dbContext.StudentCourseMark.Where(x => x.Id == Id);
             return scmark.ToList();
         }
-
+        public StudentMark CreateStudentMarkEachSemester(string userId,string grade, string semester)
+        {
+            List<StudentCourseMark> scmark = _dbContext.StudentCourseMark.Where(x => x.UserId == userId && x.semester == semester&& x.grade == semester).ToList();
+            StudentMark stumark = new StudentMark(userId,grade,semester, scmark);
+            return stumark;
+        }
         public void SaveStudentCourseMark(List<StudentCourseMark> scmark)
         {
             // 保存成绩到数据库
