@@ -17,7 +17,7 @@ namespace todo_api
             builder.Services.AddSwaggerGen();
             //把DbContext加入到容器
             builder.Services.AddDbContext<EvaDbContext>(opt => opt.UseMySQL(
-                "Server=localhost;Database=EvaSystemDB;User=root;Password=abcd181818"));
+                "Server=localhost;Database=EvaSystemDB;User=root;Password=112648"));
 
             var app = builder.Build();
 

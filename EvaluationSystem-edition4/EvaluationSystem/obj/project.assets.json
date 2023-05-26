@@ -1085,6 +1085,15 @@
             "rid": "win"
           }
         }
+      },
+      "vue/2.6.11": {
+        "type": "package"
+      },
+      "vue-resource/1.3.4": {
+        "type": "package"
+      },
+      "Vue.Js.Element.UI/2.10.0.1": {
+        "type": "package"
       }
     }
   },
@@ -3284,6 +3293,51 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "vue/2.6.11": {
+      "sha512": "QvC2UH8Eaz/aEc6+bf1WpdtZl8iAToPuPxI2To6yDfOyqcTL4fvAlpNix1TXzSVQhPcABmbDcDt49uq/HcNmOQ==",
+      "type": "package",
+      "path": "vue/2.6.11",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Content/Scripts/vue.js",
+        "Content/Scripts/vue.min.js",
+        "images/icon.png",
+        "license/LICENSE.txt",
+        "vue.2.6.11.nupkg.sha512",
+        "vue.nuspec"
+      ]
+    },
+    "vue-resource/1.3.4": {
+      "sha512": "mVhsNa1ArDLa2ZuXpN1PjLhDnsESnUaxI6wR2/afw1rODC/B323M7C/Ao6kg50opQy/u6VoXBme3+JHWzkMWfw==",
+      "type": "package",
+      "path": "vue-resource/1.3.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Content/Scripts/vue-resource.common.js",
+        "Content/Scripts/vue-resource.es2015.js",
+        "Content/Scripts/vue-resource.js",
+        "Content/Scripts/vue-resource.min.js",
+        "vue-resource.1.3.4.nupkg.sha512",
+        "vue-resource.nuspec"
+      ]
+    },
+    "Vue.Js.Element.UI/2.10.0.1": {
+      "sha512": "CFIC6TTLSmcenzbf86W1GW1bVIXEaguCHVpPKztnd7uTj4/9wW7zqX54B/DYBXhUdTbYrrDXRGAJhty2uzcRyw==",
+      "type": "package",
+      "path": "vue.js.element.ui/2.10.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/Content/ElementUI/element-ui.css",
+        "content/Content/ElementUI/fonts/element-icons.ttf",
+        "content/Content/ElementUI/fonts/element-icons.woff",
+        "content/Scripts/ElementUI/element-ui.js",
+        "vue.js.element.ui.2.10.0.1.nupkg.sha512",
+        "vue.js.element.ui.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
@@ -3292,7 +3346,10 @@
       "Microsoft.AspNetCore.OpenApi >= 7.0.5",
       "Microsoft.EntityFrameworkCore >= 7.0.5",
       "MySql.EntityFrameworkCore >= 7.0.2",
-      "Swashbuckle.AspNetCore >= 6.4.0"
+      "Swashbuckle.AspNetCore >= 6.4.0",
+      "Vue.Js.Element.UI >= 2.10.0.1",
+      "vue >= 2.6.11",
+      "vue-resource >= 1.3.4"
     ]
   },
   "packageFolders": {
@@ -3361,6 +3418,18 @@
           "Swashbuckle.AspNetCore": {
             "target": "Package",
             "version": "[6.4.0, )"
+          },
+          "Vue.Js.Element.UI": {
+            "target": "Package",
+            "version": "[2.10.0.1, )"
+          },
+          "vue": {
+            "target": "Package",
+            "version": "[2.6.11, )"
+          },
+          "vue-resource": {
+            "target": "Package",
+            "version": "[1.3.4, )"
           }
         },
         "imports": [

@@ -31,6 +31,7 @@ namespace EvaluationSystem.DAO
         // public DbSet<ComEvaAn> comEvaAns { get; set; } = null!;
         //public DbSet<CourseMark> courseMarks { get; set; } = null!;
         public DbSet<StudentCourseMark> StudentCourseMark { get; set; }=null!;
+        public DbSet<GradePointConclusion> GradePointConclusion { get; set; }=null!;
 
 
        
