@@ -32,9 +32,9 @@ namespace EvaluationSystem.Models
         //F2项-------------------------------------------------------
         public int F2B1num;
         public int F2B2num;
-        public List<CourseMark> B1 { get; set; }
+        public List<StudentCourseMark> B1 { get; set; }
         //public List<Bn> FailedB1 = B1.FindAll(b => b.BState = false);
-        public List<CourseMark> B2 { get; set; }
+        public List<StudentCourseMark> B2 { get; set; }
         public double F2B1;//{ get { return (B1.Sum(b => b.Credit * b.Grade)) / (B1.Sum(b => b.Credit)); } }
         public double F2B2;//{ get { return 0.002 * (B2.Sum(b => b.Credit * b.Grade)); } }
         public double F2 { get { return F2B1 + F2B2; } }
@@ -74,8 +74,8 @@ namespace EvaluationSystem.Models
         {
             F1num = F1n; A = new List<ComEvaAn>(F1n);
             F1MaxScore = 100 / F1num;
-            F2B1num = F2n1; B1 = new List<CourseMark>(F2n1);
-            F2B2num = F2n2; B2 = new List<CourseMark>(F2n2);
+            F2B1num = F2n1; B1 = new List<StudentCourseMark>(F2n1);
+            F2B2num = F2n2; B2 = new List<StudentCourseMark>(F2n2);
             F3num = F3n;
         }
         //F1的填写及查看
