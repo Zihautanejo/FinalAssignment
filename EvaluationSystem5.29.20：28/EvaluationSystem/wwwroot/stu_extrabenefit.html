@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        .stu_mark{
+            left:0px;
+            top:80px;
+            width:241px;
+            height:50px;
+        }
+        .center{
+            position: absolute;
+            left:241px;
+            top:79px;
+            width:1250px;
+            height:1668px;
+            background-color:#F2F2F2;
+        } 
+       .center_top{
+        position: absolute;
+        left:10px;
+        top:10px;
+        width:1250px;
+        height:52px;
+        background-color: #FFFFFF;
+        border: #797979;
+        border-radius: 5px;
+       }
+       .center_middle{
+        position: absolute;
+        left:10px;
+        top:100px;
+        width: 1250px;
+        height:600px;
+        background-color: #fff;
+        border-radius: 5px;
+       
+       }
+       .query{
+        position: absolute;
+        left: 20px;
+        top: 50px;
+
+       }
+       .buttons{
+        position: absolute;
+        left:0px;
+        top:100px;
+       }
+       .table{
+        position: absolute;
+        left:0px;
+        top:150px;
+       
+       }
+       .info-left{
+        position: absolute;
+        left:250px;
+        top:80px;
+       
+       }
+       .info-right{
+        position: absolute;
+        left:500px;
+        top:80px;
+       }
+        a {
+        text-decoration: none;
+        }
+       
+        div.stu_mark:hover{
+        background-color: #899C88;
+        }
+        .btn {
+        transform: scale(1);
+        }
+ 
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .el-table{
+            border-radius: 0 0 10px 10px;
+            border-top:1px solid #DEDEDE;
+            border-left:1px solid #DEDEDE;
+            border-bottom:1px solid #DEDEDE;
+        }
+       
+         .dialog{
+            position: absolute;
+            left:800px;
+            width: 900px;
+            height:900px;
+            top:200px;
+        } 
+       
+
+
+
+		</style>
+
+
+
+
+      
+   </style>
+</head>
+<body>
+    <div id="stubenefitPage">
+        <div class="top" style="position:absolute;border:#797979;left:0px;top:0px;width:1503px;height: 78px;background-color:#C5CFC4">
+            <div class="logo" style="position: absolute;left:0px;top: 0px;width: 241px;height: 78px;">
+                <img src="./file/whu.png" alt="whu" style="position: absolute;width: 53px;height: 50px;left:21px;top: 15px;">
+                <h1 style="font-size:20px;position: absolute;left: 88px;top: 20px;width: 112px;height: 30px;color: #797979;">掌上综测</h1>
+            </div>
+            <div class="self" style="position: absolute;left:1233px;top:0px;width: 176px;height:78px;">
+                <a href="stu_selfinfo.html">
+                    <img src="./file/photo.jpg" alt="photo" style="position:absolute;border-radius: 50%;width: 50px;height:50px;left:1264;top:15px;">
+                </a>
+               <p style="font-size: 14px;color:#797979;position: absolute;left: 70px;top:15px;width: 81px;height: 13px;">{{user.name}}</p>
+               <a href="stu_message.html">
+                    <img src="./file/message.png" alt="message" style="position:absolute;width: 38px;height: 30px;left:150px;top:24px;" >
+               </a>
+            </div>
+        </div>
+        <div class="left" style="position: absolute;width: 241px;height:1668px;left:0px;top:78px;background-color: #E6E6E6;">
+            <a href="stu_mark.html" style="color:inherit">
+                <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+                  成绩信息
+                </div>
+            </a>
+            <a v-bind:href="['stu_extrabenefit.html?account='+user.userId]" style="color:inherit">
+                <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+                  我的加分
+                </div>
+            </a>
+            <a href="stu_eva.html" style="color:inherit">
+                <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+                  综测管理
+                </div>
+            </a>
+            <a v-bind:href="['stu_selfinfo.html?account='+user.userId]" style="color:inherit" >
+                <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+                 个人信息
+                </div>
+            </a>
+
+        </div>
+        <div class="center">
+            <div class="center_top">
+                <button class="btn" @click="getParams" onclick="javascript:location.reload()" style="position: absolute;left: 1000px;top:10px;width: 40px;height:34px;background-color: #899C88;border: #797979;color: #fff;border-radius: 5px;">
+                    刷新</button>
+                这是一个/面包屑/导航栏
+               
+            </div>
+            <div class="center_middle">
+                <div class="query">
+                    加分类型：
+                    <select v-model="type" name="types" id="types" style="position: absolute;top:-10px;width: 309px;height: 35px;border-radius: 5px;">
+                        <option value="all">全部</option>
+                        <option value="c1">发表学术论文及文学、艺术、新闻等作品(C1)</option>
+                        <option value="c2">科技发明与大学生科研(C2)</option>
+                        <option value="c3">学科竞赛与文体竞赛(C3)</option>
+                        <option value="c4">社会活动与社会时间(C4)</option>
+                        <option value="c5">资格认证及创业(C5)</option>
+                    </select>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    状态：
+                    <select v-model="status" name="status" id="status" style="position: absolute;width: 143px;height: 35px;left:500px;top:-10px;border-radius: 5px;">
+                        <option value="all">所有</option>
+                        <option value="待审核">待审核</option>
+                        <option value="已通过">已通过</option>
+                        <option value="已驳回">已驳回</option>
+                        <option value="已取消">已取消</option>
+                    </select>
+                    <input type="text" name="theme" id="theme" v-model="theme" placeholder="请输入需查询主题" style="position: absolute;width: 300px;height: 35px;left:700px;top:-10px;border-radius: 5px;">
+                    <button class="btn" style="position: absolute;left:1100px;top:-10px;width: 67px;height: 35px;background-color: #899C88;color: #E6E6E6;border-radius: 5px;border: #C5CFC4;">查询</button>
+                </div>
+                <div class="buttons">
+                    <button class="btn" @click="jump_rules" style="position:absolute;left:20px;width: 174px;height: 35px;background-color: #C5CFC4;border: #899C88;border-radius: 5px;">查看详细申请加分规则</button>
+                    <button class="btn" @click='innerVisible=true' style="position: absolute;left:220px;width:94px;height:35px;background-color: #899C88;border:#C5CFC4;color: #E6E6E6;border-radius: 5px;">申请加分</button>
+                    <button class="btn" style="position: absolute;left: 350px;width: 144px;height:35px;background-color: #899C88;border: #E6E6E6;color: #E6E6E6;border-radius: 5px;">选择加分项到综测</button>
+                </div>
+                <div class="table">
+                    <!-- <table style="position:absolute;width:1250px;border-radius: 5px;" border="1px solid #F2F2F2" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <th>加分主题</th>
+                            <th>加分类型</th>
+                            <th>奖励分数</th>
+                            <th>奖项时间</th>
+                            <th>状态</th>
+                            <th>备注</th>
+                        </tr>
+                        <tr>
+                            <th>学科竞赛</th>
+                            <th>C1</th>
+                            <th>2</th>
+                            <th>2023-05-26</th>
+                            <th>待审核</th>
+                            <th>暂无</th>
+                        </tr>
+                       
+                    </table> -->
+                    <el-table style="position:absolute;width:1250px;"  :cell-style="{'text-align':'center'}" :data="benefits" :fit="true" :show-header="true">
+                        <el-table-column prop="benefitTheme" label="加分主题">
+                        </el-table-column>
+                        <el-table-column prop="benefitType" label="加分类型">
+                        </el-table-column>
+                        <el-table-column prop="benefitPoint" label="奖励分数">
+                            <!-- <template slot-scope="scope">
+                                <el-tag v-show="scope.row.isComplete" style="color: green;">已完成</el-tag>
+                                <el-tag v-show="!scope.row.isComplete">未完成</el-tag>
+                            </template> -->
+                        </el-table-column>
+                        <el-table-column prop="benefitTime" label="奖项时间">
+                        </el-table-column>
+                        <el-table-column prop="benefitStatus" label="状态">
+                        </el-table-column>
+                        <el-table-column prop="benefitNote" label="备注">
+                        </el-table-column>
+                        <!-- <el-table-column label="操作" fixed="right" width="200px">
+                            <template slot-scope="scope">
+                                <el-button mc-type="column-el-button" size="mini" type="primary" @click="showEdit(scope.row)">编辑</el-button>
+                                <el-button mc-type="column-el-button" size="mini" type="danger" @click="deleteTodo(scope.row)">删除</el-button>
+                            </template>
+                        </el-table-column> -->
+                    </el-table>
+       
+                    
+        
+  
+      
+                </div>
+                <!-- <div>
+                    <el-dialog class="dialog" title='内部表单弹窗' :modal="true" :visible.sync='innerVisible' :before-close='outClose' append-to-body>
+                        <el-form :model='extrabenefit' label-width='80px'>
+                            <el-form-item label='日期'>
+                                <el-input v-model='extrabenefit.benefitTheme'></el-input>
+                            </el-form-item>
+                            <el-form-item label='姓名'>
+                                <el-input v-model='extrabenefit.benefitType'></el-input>
+                            </el-form-item>
+                            <el-form-item label='地址'>
+                                <el-input v-model='extrabenefit.benefitPoint'></el-input>
+                            </el-form-item>
+                        </el-form>
+                        <span slot='footer'>
+                            <el-button @click='innerVisible=false'>返回</el-button>
+                        </span>
+                    </el-dialog>
+                   
+
+                      
+                      
+                </div> -->
+                <div>
+                    
+       
+                </div>
+               
+            </div>
+    </div>
+   
+</body>
+
+
+<script>
+    var vue=new Vue({
+        el:'#stubenefitPage',
+        data:{
+            student: {},
+            user:{},
+            benefits:[],
+            extrabenefit:{},
+            type:"all",
+            status:"all",
+            theme:""
+            
+            // status:
+            // outVisible: false,
+            // innerVisible: false,
+            // student:""
+            
+            
+        },
+      
+       
+        methods: {
+            jump_rules:function(){
+                window.location.href = '/extrabenefit_rule.html?'+'account='+this.user.userId
+            },
+            
+            queryBenefits:function(){
+                var path='/api/ExtraBenefit/query';
+                if(type=='all')
+                {
+                    if(status=='all')
+                    {
+                        if(theme!='')
+                        {
+                            theme=URLDecoder.decode(name,"UTF-8");
+                            path=path+'theme='+theme;
+                        }
+                    }
+                }
+            },
+            getAllBenefits:function(){
+                var path='/api/ExtraBenefit'
+                axios.get(path)
+                .then(response=>this.benefits=response.data)
+                .catch(e=>this.$message.error(e.response.data))
+            },
+            getParams : function(){
+               var url= location.search
+               var theRequest= new Object();
+               if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                }
+                }
+               this.student={userId:theRequest.account};
+               vue.getInfo(theRequest.account);
+               vue.getUser(theRequest.account);
+            },
+
+            getInfo:function(account){
+                var path = '/api/User/stu';
+                if(account!=null)path=path+'?id='+account;
+                axios.get(path)
+                .then(response=>this.student=response.data)
+                .catch(e=>this.$message.error(e.response.data))
+                
+            },
+            getUser:function(account){
+                var path='/api/User/'+account
+                axios.get(path)
+                .then(response=>this.user=response.data)
+                .catch(e=>this.$message.error(e.response.data))
+            },
+            jump:function(){
+                window.location.href = '/stu_selfinfo.html?'+'account='+this.user.userId
+                
+            }
+            
+           
+        }
+    
+
+    })
+    vue.getParams();
+    vue.getAllBenefits();
+    
+ 
+</script>
+
+</html>
