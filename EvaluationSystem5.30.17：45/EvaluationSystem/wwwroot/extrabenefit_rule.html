@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        .stu_mark{
+            left:0px;
+            top:80px;
+            width:241px;
+            height:50px;
+        }
+        .center{
+            position: absolute;
+            left:241px;
+            top:79px;
+            width:1250px;
+            height:1668px;
+            background-color:#F2F2F2;
+        } 
+       .center_top{
+        position: absolute;
+        left:10px;
+        top:10px;
+        width:1250px;
+        height:52px;
+        background-color: #FFFFFF;
+        border: #797979;
+        border-radius: 5px;
+       }
+       .center_middle{
+        position: absolute;
+        left:10px;
+        top:100px;
+        width: 1250px;
+        height:600px;
+        background-color: #fff;
+        border-radius: 5px;
+       
+       }
+       .query{
+        position: absolute;
+        left: 20px;
+        top: 50px;
+
+       }
+       .buttons{
+        position: absolute;
+        left:0px;
+        top:100px;
+       }
+     
+       .info-left{
+        position: absolute;
+        left:250px;
+        top:80px;
+       
+       }
+       .info-right{
+        position: absolute;
+        left:500px;
+        top:80px;
+       }
+       .rule{
+        position: absolute;
+        left:10px;
+        top:100px;
+        width:1250px;
+        height:749px;
+        background-color: #FFFFFF;
+        border: #797979;
+        border-radius: 5px;
+       }
+      
+        a {
+        text-decoration: none;
+        }
+       
+        div.stu_mark:hover{
+        background-color: #899C88;
+        }
+        .btn {
+        transform: scale(1);
+        }
+ 
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .btn1{
+            font-size: larger;
+        }
+        .btn1:focus{
+            color: #899C88;
+            text-decoration: underline;
+        } 
+        
+        .detail{
+            position: absolute;
+           
+            width:1000px;
+            height:479px;
+            top:150px;
+            left:20px;
+            border-top: 1px;
+           outline:solid;
+            
+
+
+
+        }
+</style>
+</head>
+<body>
+    <div id="stubenefitPage">
+        <div class="top" style="position:absolute;border:#797979;left:0px;top:0px;width:1503px;height: 78px;background-color:#C5CFC4">
+            <div class="logo" style="position: absolute;left:0px;top: 0px;width: 241px;height: 78px;">
+                <img src="./file/whu.png" alt="whu" style="position: absolute;width: 53px;height: 50px;left:21px;top: 15px;">
+                <h1 style="font-size:20px;position: absolute;left: 88px;top: 20px;width: 112px;height: 30px;color: #797979;">掌上综测</h1>
+            </div>
+            <div class="self" style="position: absolute;left:1233px;top:0px;width: 176px;height:78px;">
+                <a v-bind:href="['stu_selfinfo.html?account='+user.userId]">
+                    <img src="./file/photo.jpg" alt="photo" style="position:absolute;border-radius: 50%;width: 50px;height:50px;left:1264;top:15px;">
+                </a>
+               <p style="font-size: 14px;color:#797979;position: absolute;left: 70px;top:15px;width: 81px;height: 13px;">{{user.name}}</p>
+               <a href="stu_message.html">
+                    <img src="./file/message.png" alt="message" style="position:absolute;width: 38px;height: 30px;left:150px;top:24px;" >
+               </a>
+            </div>
+        </div>
+        <div class="left" style="position: absolute;width: 241px;height:1668px;left:0px;top:78px;background-color: #E6E6E6;">
+            <a href="stu_mark.html" style="color:inherit">
+                <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+                  成绩信息
+                </div>
+            </a>
+            <a v-bind:href="['stu_extrabenefit.html?account='+this.user.userId]" style="color:inherit">
+                <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+                  我的加分
+                </div>
+            </a>
+            <a href="stu_eva.html" style="color:inherit">
+                <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+                  综测管理
+                </div>
+            </a>
+            <a v-bind:href="['stu_selfinfo.html?account='+this.userId]" style="color:inherit" >
+                <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+                 个人信息
+                </div>
+            </a>
+
+        </div>
+        <div class="center">
+            <div class="center_top">
+                <button class="btn" @click="getParams" onclick="javascript:location.reload()" style="position: absolute;left: 1000px;top:10px;width: 40px;height:34px;background-color: #899C88;border: #797979;color: #fff;border-radius: 5px;">
+                    刷新</button>
+                这是一个/面包屑/导航栏
+               
+            </div>
+        <div class="rule">
+            <div>
+                <h1 style="position: absolute;left:30px;">加分规则</h1>
+                <a v-bind:href="['stu_extrabenefit.html?account='+user.userId]"><input type="button" value='返回加分填报' style="position: absolute;width:110px;height: 27px;background-color: #899C88;color: #E6E6E6;border:#797979;border-radius: 5px;left:200px;top: 30px;"></a>
+                <!-- <button @click="jump" style="position: absolute;width:110px;height: 27px;background-color: #899C88;color: #E6E6E6;border:#797979;border-radius: 5px;left:200px;top: 30px;">返回加分填报</button> -->
+            </div>
+            <div>
+                <button class="btn1" @click="change1" style="position: absolute;left:50px;top:70px;width: 82px;height: 40px;background-color: #FFFFFF;border:#899C88;">C1</button>
+                <button class="btn1" @click="change2" style="position: absolute;left:132px;top:70px;width: 82px;height: 40px;background-color: #FFFFFF;border:#899C88;">C2</button>
+                <button class="btn1" @click="change3" style="position: absolute;left:214px;top:70px;width: 82px;height: 40px;background-color: #FFFFFF;border:#899C88;">C3</button>
+                <button class="btn1" @click="change4" style="position: absolute;left:296px;top:70px;width: 82px;height: 40px;background-color: #FFFFFF;border:#899C88;">C4</button>
+                <button class="btn1" @click="change5" style="position: absolute;left:378px;top:70px;width: 82px;height: 40px;background-color: #FFFFFF;border:#899C88;">C5</button>
+            </div>
+            <div class="detail">
+                {{show}}
+            </div>
+           
+        </div>
+        </div>
+    </div>
+</body>
+<script>
+    var vue=new Vue({
+        el:'#stubenefitPage',
+        data:{
+            student: {},
+            user:{},
+            userId:"",
+            c1:"c1",
+            c2:"c2",
+            c3:"c3",
+            c4:"c4",
+            c5:"c5",
+            show:""
+            // student:""
+            
+            
+        },
+      
+       
+        methods: {
+            change1:function(){
+                this.show=this.c1;
+            },
+            change2:function(){
+                this.show=this.c2;
+            },
+            change3:function(){
+                this.show=this.c3;
+            },
+            change4:function(){
+                this.show=this.c4;
+            },
+            change5:function(){
+                this.show=this.c5;
+            },
+            // getAllBenefits:function(account){
+            //     var path='/api/ExtraBenefit/'+account;
+            //     axios.get(path)
+            //     .then(response=>this.benefits=response.data)
+            //     .catch(e=>this.$message.error(e.response.data))
+            // },
+            getParams : function(){
+               var url= location.search
+               var theRequest= new Object();
+               if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                }
+                }
+               this.student={userId:theRequest.account};
+            //    vue.getInfo(theRequest.account);
+               vue.getUser(theRequest.account);
+            //    vue.getAllBenefits(theRequest.account);
+               
+            },
+            // getInfo:function(account){
+            //     var path = '/api/User/stu';
+            //     if(account!=null)path=path+'?id='+account;
+            //     axios.get(path)
+            //     .then(response=>this.student=response.data)
+            //     .catch(e=>this.$message.error(e.response.data))
+                
+            // },
+            getUser:function(account){
+                var path='/api/User/'+account
+                axios.get(path)
+                .then(response=>this.user=response.data)
+                .catch(e=>this.$message.error(e.response.data))
+            },
+           
+            
+           
+        }
+    
+
+    })
+    vue.getParams();
+    
+ 
+</script>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <title>辅导员加分申请</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+   <style>
+        
+        .center{
+            position: absolute;
+            left:241px;
+            top:79px;
+            width:1268px;
+            height:1668px;
+            background-color:#F2F2F2;
+        } 
+       .center_top{
+        position: absolute;
+        left:10px;
+        top:10px;
+        width:1250px;
+        height:52px;
+        background-color: #FFFFFF;
+        border: #797979;
+        border-radius: 5px;
+       }
+       .center_middle{
+        position: absolute;
+        left:10px;
+        top:100px;
+        width: 1250px;
+        height:600px;
+        background-color: #fff;
+        border-radius: 5px;
+       
+       }
+       .info-left{
+        position: absolute;
+        left:250px;
+        top:80px;
+       
+       }
+       .info-right{
+        position: absolute;
+        left:500px;
+        top:80px;
+       }
+        a {
+        text-decoration: none;
+        }
+       
+        div.stu_mark:hover{
+        background-color: #899C88;
+        }
+        .btn {
+        transform: scale(1);
+        }
+ 
+        .btn:active {
+            transform: scale(0.97);
+        }
+       
+
+
+      
+   </style>
+</head>
+<body>
+    <div id="stuinfoPage">
+        <div class="top" style="position:absolute;border:#797979;left:0px;top:0px;width:1503px;height: 78px;background-color:#C5CFC4">
+            <div class="logo" style="position: absolute;left:0px;top: 0px;width: 241px;height: 78px;">
+                <img src="./file/whu.png" alt="whu" style="position: absolute;width: 53px;height: 50px;left:21px;top: 15px;">
+                <h1 style="font-size:20px;position: absolute;left: 88px;top: 20px;width: 112px;height: 30px;color: #797979;">掌上综测</h1>
+            </div>
+            <div class="self" style="position: absolute;left:1233px;top:0px;width: 176px;height:78px;">
+                <a v-bind:href="['stu_selfinfo.html?account='+user.userId]">
+                    <img src="./file/photo.jpg" alt="photo" style="position:absolute;border-radius: 50%;width: 50px;height:50px;left:1264;top:15px;">
+                </a>
+               <p style="font-size: 14px;color:#797979;position: absolute;left: 70px;top:15px;width: 81px;height: 13px;">{{user.name}}</p>
+               <a href="stu_message.html">
+                    <img src="./file/message.png" alt="message" style="position:absolute;width: 38px;height: 30px;left:150px;top:24px;" >
+               </a>
+            </div>
+        </div>
+        <div class="left" style="position: absolute;width: 241px;height:1668px;left:0px;top:78px;background-color: #E6E6E6;">
+            <a href="tutor_stuinfo.html" style="color:inherit">
+                <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+                 学生信息
+                </div>
+            </a>
+            <a href="tutor_stugrade.html" style="color:inherit">
+                <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+                  学生成绩
+                </div>
+            </a>
+            <a href="tutor_extrabenefits.html" style="color:inherit">
+                <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+                  加分申请
+                </div>
+            </a>
+            <a href="tutor_comeva.html" style="color:inherit" >
+                <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+                 综测管理
+                </div>
+            </a>
+            <a v-bind:href="['tutor_selfinfo.html?account='+user.userId]" style="color:inherit" >
+                <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+                 个人信息
+                </div>
+            </a>
+
+        </div>
+        <div class="center">
+            <div class="center_top">
+                <button class="btn" @click="getParams" onclick="javascript:location.reload()" style="position: absolute;left: 1000px;top:10px;width: 40px;height:34px;background-color: #899C88;border: #797979;color: #fff;border-radius: 5px;">
+                    刷新</button>
+                这是一个/面包屑/导航栏
+               
+            </div>
+            <div class="center_middle">
+                <div style="position:absolute;left:20px;top:20px;">
+                    专业&nbsp;&nbsp;
+                    <el-select>
+                        <el-option label="全部" value="all"> </el-option>
+                        <el-option label="计算机科学与技术" value="计算机科学与技术"></el-option>
+                        <el-option label="软件工程" value="软件工程"></el-option>
+                        <el-option label="人工智能" value="人工智能"></el-option>
+                    </el-select>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    年级
+                    <el-select>
+                        <el-option label="全部" value="all"> </el-option>
+                        <el-option label="2021级" value="2021"></el-option>
+                        <el-option label="2022级" value="2022"></el-option>
+                       
+                    </el-select>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    审批状态
+                    <el-select>
+                        <el-option label="全部" value="all"> </el-option>
+                        <el-option label="待审核" value="待审核"></el-option>
+                        <el-option label="已通过" value="已通过"></el-option>
+                        <el-option label="已驳回" value="已驳回"></el-option>
+                        <el-option label="已取消" value="已取消"></el-option>
+                       
+                    </el-select>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    加分类型
+                    <el-select>
+                        <el-option label="全部" value="all"></el-option>
+                            <el-option label="发表学术论文及文学、艺术、新闻等作品(C1)" value="C1"></el-option>
+                            <el-option label="科技发明与大学生科研(C2)" value="C2"></el-option>
+                            <el-option label="学科竞赛与文体竞赛(C3)" value="C3"></el-option>
+                            <el-option label="社会活动与社会时间(C4)" value="C4"></el-option>
+                            <el-option label="资格认证及创业(C5)" value="C5"></el-option>
+                       
+                    </el-select>
+
+                </div>
+                <div class="table">
+                    <el-table style="position:absolute;top: 100px;width: 1250px;" :data="benefits" :fit="true" :show-header="true">
+                       
+                        <el-table-column prop="benefitTheme" label="序号" >
+                        </el-table-column>
+                        <el-table-column prop="benefitType" label="申请加分" >
+                        </el-table-column>
+                        <el-table-column prop="benefitPoint" label="申请加分类型">
+                        </el-table-column>
+                        <el-table-column prop="benefitTime" label="申请人姓名">
+                        </el-table-column>
+                        <el-table-column prop="benefitTime" label="申请人学号">
+                        </el-table-column>
+                        <el-table-column prop="benefitTime" label="申请时间">
+                        </el-table-column>
+                        <el-table-column prop="benefitTime" label="审批状态">
+                        </el-table-column>
+                        <el-table-column prop="benefitTime" label="操作">
+                        </el-table-column>
+                       
+                        
+                       
+                
+        
+                    </el-table>
+                    <el-button style="position:absolute;left:1100px;top:500px;background-color: #899C88;color: #E6E6E6;">查询</el-button>
+                </div>  
+            </div>
+           
+        </div>
+    </div>
+       
+
+        
+</body>
+<script>
+    var vue=new Vue({
+        el:'#stuinfoPage',
+        data:{
+            tutor: {},
+            user:{}
+            // student:""
+            
+            
+        },
+      
+       
+        methods: {
+            getParams : function(){
+               var url= location.search
+               var theRequest= new Object();
+               if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                }
+                }
+               this.tutor={userId:theRequest.account};
+               vue.getInfo(theRequest.account);
+               vue.getUser(theRequest.account);
+            },
+
+            getInfo:function(account){
+                var path = '/api/User/tutor';
+                if(account!=null)path=path+'?id='+account;
+                axios.get(path)
+                .then(response=>this.tutor=response.data)
+                .catch(e=>this.$message.error(e.response.data))
+                
+            },
+            getUser:function(account){
+                var path='/api/User/'+account
+                axios.get(path)
+                .then(response=>this.user=response.data)
+                .catch(e=>this.$message.error(e.response.data))
+            },
+            jump:function(){
+                window.location.href = '/tutor_selfinfo.html?'+'account='+this.user.userId
+                
+            }
+            
+           
+        }
+    
+
+    })
+    vue.getParams();
+    
+ 
+</script>
+</html>
