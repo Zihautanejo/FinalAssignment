@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <!--引入 element-ui 的样式，-->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 必须先引入vue，  后使用element-ui -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- 引入element 的组件库-->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <style>
+        .indexPage {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #dce3dc;
+        }
+        .center-card {
+            width: 450px;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            border-radius: 45px;
+        }
+        .logo {
+            width: 200px;
+            height: 200px;
+            margin: 60px auto auto;
+        }
+        .passwordLoginForm {
+            margin: 25px;
+            margin-bottom:25px;
+        }
+        .blank{
+            height:25px;
+        }
+
+        .el-button--success {
+            border-color: #446b31 !important;
+            background: #446b31 !important;
+        }
+
+        .el-button--success:hover {
+            background: #446b31 !important;
+            border-color: #446b31 !important;
+            color: #FFF !important;
+            opacity: 0.8;
+        }
+
+        .el-radio__input.is-checked + .el-radio__label {
+            color: #446b31 !important;
+        }
+
+        .el-radio__input.is-checked .el-radio__inner {
+            background: #446b31 !important;
+            border-color: #446b31 !important;
+        }
+
+
+    </style>
+
+
+</head>
+<body>
+    <div id="indexPage" class="indexPage">
+  
+        <el-container>
+            <el-card class="center-card">
+                
+                <img src="./file/logo.png" class="logo">
+   
+                <div class="blank"></div>
+                <el-form :model="passwordLoginForm"
+                         class="passwordLoginForm"
+                         ref="passwordLoginForm">
+
+                    <!-- 学号 -->
+                    <el-form-item prop="account">
+                        <el-input type="text"
+                                  placeholder="请输入账号"
+                                  v-model="passwordLoginForm.account"></el-input>
+                    </el-form-item>
+
+                    <!-- 密码框 -->
+                    <el-form-item prop="password">
+                        <el-input type="password"
+                                  show-password
+                                  placeholder="请输入密码"
+                                  v-model="passwordLoginForm.password"></el-input>
+                    </el-form-item>
+
+                    <!-- 用户身份单选 -->
+                    <el-form-item prop="type">
+                        <el-radio-group v-model="passwordLoginForm.type">
+                            <el-radio :label="0">学生</el-radio>
+                            <el-radio :label="1">辅导员</el-radio>
+                          
+                        </el-radio-group>
+                    </el-form-item>
+
+                        <!-- 登录按钮 -->
+                        <el-form-item>
+                            <el-button type="success"
+                                       class="loginbtn"
+                                       style="width:100%;"
+                                       @click.native.prevent="login">
+                                登录
+                            </el-button>
+                        </el-form-item>
+
+                </el-form>
+            </el-card>
+        </el-container>
+
+    </div>
+   
+</body>
+
+<script>
+        
+    var vue = new Vue({
+        el: '#indexPage',
+        data: {
+            user:"",
+            passwordLoginForm: {
+                account: "",
+                password: "",
+                type: 0,
+            // list:[{value:"学生"},{value:"辅导员"},{value:"超管"}]
+            }
+        },
+        methods: {
+            
+            getNum: function () {
+                var radio=document.getElementsByName("type");
+                if(radio[0].checked)this.type=0;
+                else if(radio[1].checked)this.type=1;
+                else this.type=2;
+            },
+
+            login: function (account, password, type) {
+                var path = '/api/User';
+                console.log("表单",this.passwordLoginForm)
+                if (account != null) path = path + "?id=" + this.passwordLoginForm.account + "&pwd=" + this.passwordLoginForm.password + "&type=" + this.passwordLoginForm.type
+                axios.get(path)
+                    .then(response => {
+                        this.user = response.data;
+                        vue.jump();
+                        this.$refs["passwordLoginForm"].resetFields();
+                    })
+                    .catch(e => {
+                        this.$message.error(e.response.data)
+                    });
+                 
+                
+            },
+            jump: function () {
+
+                // vue.login(vue.account,vue.password,vue.type);
+                if (this.user) {
+                    if (this.passwordLoginForm.type == 0) {
+                        window.location.href = '/stu_selfinfo.html?' + 'account=' + this.user
+                    }
+                    else if (this.passwordLoginForm.type == 1) {
+                        window.location.href = '/tutor_selfinfo.html?' + 'account=' + this.user
+                    }
+                    else {
+                        window.location.href = '/superadmin_selfinfo.html' + 'account=' + this.user
+                    }
+
+                }
+            },
+            /*login: function (account, password, type) {
+                var path = '/api/User';
+                if (account != null) path = path + "?id=" + this.account + "&pwd=" + this.password + "&type=" + this.type
+                axios.get(path)
+                    .then(response => this.user = response.data)
+                    .catch(e => this.$message.error(e.response.data))
+                vue.jump()
+            }*/
+        }
+
+           
+
+
+
+
+
+      
+    })            
+    
+</script>
+</html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>综测管理</title>
+    <!--引入 element-ui 的样式，-->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 必须先引入vue，  后使用element-ui -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- 引入element 的组件库-->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <style>
+        /*dfy：新的页面可以复制style里面的*/
+        .top {
+            border: #797979;
+            background-color: #C5CFC4;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin: auto;
+        }
+
+        .title {
+            display: flex;
+            align-items: center;
+        }
+
+        h3 {
+            margin: auto;
+            margin-left: 20px;
+            color: #797979;
+        }
+
+        .el-menu .el-menu-item:hover {
+            outline: 0 !important;
+            color: #fff !important;
+            background: #899C88 !important;
+        }
+
+        .el-menu .el-menu-item.is-active {
+            color: #fff !important;
+            background: #899C88 !important;
+        }
+
+        .blank {
+            position: relative;
+            width: 78%;
+        }
+
+        .self {
+            display: flex;
+            align-items: center;
+        }
+
+        .avatar {
+            border-radius: 50%;
+            height: 50px;
+            margin: 10px;
+        }
+
+        .name {
+            color: #797979;
+        }
+
+        .message {
+            width: 20px;
+            margin: auto;
+            margin-left: 15px;
+        }
+
+        .left {
+            width: 233px !important;
+            background-color: #E6E6E6;
+            height: 100vh;
+        }
+
+        /*------------这里之前的style都是导航栏相关的，如果要用需要复制------------------*/
+
+        .el-button--success {
+            border-color: #899C88 !important;
+            background: #899C88 !important;
+        }
+
+            .el-button--success:hover {
+                background: #899C88 !important;
+                border-color: #899C88 !important;
+                color: #FFF !important;
+                opacity: 0.8;
+            }
+
+        .stu_mark {
+            left: 0px;
+            top: 80px;
+            width: 241px;
+            height: 50px;
+        }
+
+        .center {
+            background-color: #F2F2F2;
+        }
+
+        .center_top {
+            margin: 15px;
+            padding-left: 20px;
+            padding-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #FFFFFF;
+            border: #797979;
+            border-radius: 5px;
+        }
+
+        .el-card {
+            margin: 15px;
+        }
+
+        .center_middle {
+            display: flex;
+            align-items: center;
+        }
+
+        .bigAvatar {
+            height: 270px;
+            border-radius: 50%;
+            margin: 30px;
+        }
+
+        span {
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        div.stu_mark:hover {
+            background-color: #899C88;
+        }
+
+        .btn {
+            transform: scale(1);
+        }
+
+            .btn:active {
+                transform: scale(0.97);
+            }
+
+        .info-left {
+            margin-left: 40px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+        }
+
+        .right-button {
+            margin-left: 10px;
+        }
+
+        .left-button {
+            margin-left: 650px;
+        }
+
+        .right-button1 {
+            margin-left: 150px;
+        }
+
+        .left-button1 {
+            margin-left: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="tutorsingleevaPage">
+
+        <el-container class="container">
+            <el-header class="top" height="70px">
+                <div class="title" width="250px">
+                    <img src="./file/logo.png" class="logo">
+                    <h3>掌上综测</h3>
+                </div>
+                <div class="blank"></div>
+                <div class="self">
+                    <a v-bind:href="['tutor_selfinfo.html?account='+user.userId]">
+                        <img src="./file/photo.jpg" alt="photo" class="avatar">
+                    </a>
+                    <p class="name">{{user.name}}</p>
+                    <a v-bind:href="['tutor_message.html?account='+user.userId]">
+                        <img :src="ImageSrc" alt="message" class="message">
+                    </a>
+                </div>
+            </el-header>
+            <el-container>
+                <el-aside class="left">
+                    <el-row>
+                        <el-col>
+                            <el-menu default-active="3"
+                                     class="el-menu-vertical-demo"
+                                     background-color="#E6E6E6"
+                                     active-text-color="#fff">
+                                <el-menu-item index="1" @click="routeTo('tutor_stugrade')">
+                                    <span slot="title">学生成绩</span>
+                                </el-menu-item>
+                                <el-menu-item index="2" @click="routeTo('tutor_extrabenefits')">
+                                    <span slot="title">加分申请</span>
+                                </el-menu-item>
+                                <el-menu-item index="3" @click="routeTo('tutor_comeva')">
+                                    <span slot="title">综测管理</span>
+                                </el-menu-item>
+                                <el-menu-item index="4" @click="routeTo('tutor_selfinfo')">
+                                    <span slot="title">个人信息</span>
+                                </el-menu-item>
+                            </el-menu>
+                        </el-col>
+                    </el-row>
+                </el-aside>
+                <el-main class="center">
+                    <div class="center_top">
+                        <h1>综测管理</h1>
+                        <el-button type="success"
+                                   size="mini"
+                                   onclick="javascript:location.reload()"
+                                   class="updatebtn">
+                            刷新
+                        </el-button>
+                    </div>
+                    <el-card>
+                        <div class="center_middle">
+                            <span>综测详情{{eva.conEvaId}}</span>
+                            <div class="card-footer" :data="eva">
+                                <el-tag type="success" class="right-button">自评总分：{{eva.ffself}}分</el-tag>
+                                <el-tag type="success" class="right-button">审核总分：{{eva.ffaudit}}分</el-tag>
+                                <el-tag type="success" class="right-button">综测表状态：{{eva.state}}</el-tag>
+                                <el-button type="success" @click="save" class="right-button1">
+                                    保存
+                                </el-button>
+                                <el-button v-show="(eva.state=='未审批')" type="success" @click="submit" class="right-button">
+                                    审核通过
+                                </el-button>
+                                <el-button v-show="(eva.state=='未审批')" type="success" @click="fail" class="right-button">
+                                    审核不通过
+                                </el-button>
+                                <el-button type="success" @click="backeva" class="right-button">
+                                    返回
+                                </el-button>
+                            </div>
+                        </div>
+                        <el-card>
+                            <div class="center_middle">
+                                <span>F1道德</span>
+                                <div class="card-footer">
+                                    <el-tag type="success" class="left-button">F1自评分数：{{eva.f1Self}}分</el-tag>
+                                    <el-tag type="success" class="right-button">F1审核分数：{{eva.f1Audit}}分</el-tag>
+                                </div>
+                            </div>
+                            <div class="table">
+                                <el-table style="width: 100% " :data="eva_F1" >
+                                    <el-table-column type="index" lable="序号">
+                                    </el-table-column>
+                                    <el-table-column prop="aSelf" label="自评分">
+                                        <template slot-scope="scope">
+                                            <span>{{scope.row.aSelf}}</span>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column  prop="aRemark" label="自我评价">
+                                        <template slot-scope="scope">
+                                            <span>{{scope.row.aRemark}}</span>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="aAudit" label="审核分">
+                                        <template slot-scope="scope">
+                                            <el-input v-show="(eva.state=='未审批')" v-model="scope.row.aAudit" placeholder="请输入分数"></el-input>
+                                            <span v-if="(eva.state=='未过审')||(eva.state=='已过审')">{{scope.row.aAudit}}</span>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </div> 
+                        </el-card>
+                        <el-card>
+                            <div class="center_middle">
+                                <span >F2必修</span>
+                                <div class="card-footer">
+                                    <el-tag type="success" class="left-button">F2必修课分数：{{eva.ff2b1}}分</el-tag>
+                                </div>
+                            </div>
+                            <div class="table">
+                                <el-table style="width: 100% " :data="eva_F2B1" >
+                                    <el-table-column type="index" lable="序号">
+                                    </el-table-column>
+                                    <el-table-column prop="courseName" label="课程名称">
+                                    </el-table-column>
+                                    <el-table-column prop="stuMark" label="分数">
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                        </el-card>
+                        <el-card>
+                            <div class="center_middle">
+                                <span >F2选修</span>
+                                <div class="card-footer">
+                                    <el-tag type="success" class="left-button">F2选修课分数：{{eva.ff2b2}}分</el-tag>
+                                </div>
+                            </div>
+                            <div class="table">
+                                <el-table style="width: 100% " :data="eva_F2B2" >
+                                    <el-table-column type="index" lable="序号">
+                                    </el-table-column>
+                                    <el-table-column prop="courseName" label="课程名称">
+                                    </el-table-column>
+                                    <el-table-column prop="stuMark" label="分数">
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                        </el-card>
+                        <el-card>
+                            <div class="center_middle">
+                                <span >F3加分</span>
+                                <div class="card-footer">
+                                    <el-tag type="success" class="left-button">F3分数：{{eva.f3}}分</el-tag>
+                                </div>
+                            </div>
+                            <div class="table">
+                                <el-table style="width: 100% " :data="eva_F3" >
+                                    <el-table-column type="index" lable="序号">
+                                    </el-table-column>
+                                    <el-table-column prop="benefitTheme" label="加分名称">
+                                    </el-table-column>
+                                    <el-table-column prop="benefitType" label="分数类型">
+                                    </el-table-column>
+                                    <el-table-column prop="benefitPoint" label="分数">
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                        </el-card>
+                    </el-card>     
+                </el-main>
+            </el-container>
+        </el-container>
+    </div>
+</body>
+    <script>
+        var vue = new Vue({
+            el: '#tutorsingleevaPage',
+            data: {
+                tutor: {},
+                account: "",
+                user: {},
+                // student:""
+                cClassId:"",
+                comEvaId:"",
+                eva: {},
+                eva_F1:[],
+                eva_F2B1:[],
+                eva_F2B2:[],
+                eva_F3: [],
+                ImageSrc: "./file/checked_message.png"
+
+            },
+
+            created() {
+                this.initialCreate();
+            },
+
+            methods: {
+                //导航栏相关跳转，需要复制
+                routeTo: function (path) {
+                    this.initialCreate();
+                    var fullpath = path + ".html?account=" + this.tutor.userId;
+                    window.location.href = fullpath;
+                },
+                initialCreate: function () {
+                    var url = location.search
+                    var theRequest = new Object();
+                    if (url.indexOf("?") != -1) {
+                        var str = url.substr(1);
+                        strs = str.split("&");
+                        for (var i = 0; i < strs.length; i++) {
+                            theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                        }
+                    }
+                    this.tutor = { userId: theRequest.account };
+                    this.comEvaId = theRequest.comEvaId;
+                    this.cClassId = theRequest.cClassId;
+
+                },
+                update: function () {
+                    this.initialCreate();
+                },
+                getParams: function () {
+                    this.initialCreate();
+                    vue.getInfo(this.tutor.userId);
+                    vue.getUser(this.tutor.userId);
+                    vue.getComEvaId(this.comEvaId);
+                    vue.IsChecked(this.tutor.userId);
+
+                },
+
+                getInfo: function (account) {
+                    var path = '/api/User/tutor';
+                    if (account != null) path = path + '?id=' + account;
+                    axios.get(path)
+                        .then(response => this.tutor = response.data)
+                        .catch(e => this.$message.error(e.response.data))
+
+                
+                },
+                getUser: function (account) {
+                    var path = '/api/User/' + account
+                    axios.get(path)
+                        .then(response => this.user = response.data)
+                        .catch(e => this.$message.error(e.response.data))
+                },
+
+                getComEvaId: function (){
+                    ///api/ComEva/ComEvaId?ComEvaId=1
+                    var path = "/api/ComEva/ComEvaId?ComEvaId="+this.comEvaId
+                    axios.get(path)
+                        .then(response => {
+                            this.eva = response.data
+                            //console.log(response)
+                            this.getDetail()  
+                        })
+                        .then(() => {
+                            this.getScore()
+                            this.getF2B1();
+                            this.getF2B2();
+                        })
+                        .catch(e => this.$message.error(e.response.data))
+                },
+
+                getScore: function () {
+                    //api/ComEva/stuId/addCourseScore?StudentId=20&grade=202&semester=%E4%&comid=6d
+                    var path = "/api/ComEva/stuId/addCourseScore?StudentId=" + this.eva.userId
+                        + "&grade=" + this.eva.grade + "&semester=下学期&comid=" + this.comEvaId;
+                    axios.put(path)
+                        .then(response => {
+                            this.eva = response.data
+                        })
+                        .catch(e => this.$message.error(e.response.data))
+                },
+
+
+                getDetail:function(){
+                    this.eva_F1=this.eva.a;
+                    //this.eva_F2B1=this.eva.b1;
+                    //this.eva_F2B2=this.eva.b2;
+                    this.eva_F3=this.eva.extBenList;
+                },
+
+                save: function () {
+                    ///api/ComEva/stuId/F1Self?comid=94aa8273-314e-4184-8187-2f022efbaf15
+                    var path = "/api/ComEva/stuId/F1Audit?comid=" + this.comEvaId
+                    axios.put(path, this.eva_F1)
+                        .then(response => {
+                            //console.log(response)
+                            this.eva = response.data
+                        })
+                        .catch(e => this.$message.error(e.response.data))
+                },
+
+                submit:function(){
+                    ///api/ComEva/ModifyState/Submit?ComEvaId=94aa8273-314e-4184-8187-2f022efbaf15
+                    // /api/ComEva/stuId/F1Self?comid=94aa8273-314e-4184-8187-2f022efbaf1
+                    this.save();
+                    var path = "/api/ComEva/ModifyState/Success?ComEvaId="+this.comEvaId
+                    axios.put(path)
+                        .then(response => this.eva = response.data)
+                        .catch(e => this.$message.error(e.response.data))
+                },
+
+                fail:function(){
+                    this.save();
+                    var path = "/api/ComEva/ModifyState/Fail?ComEvaId="+this.comEvaId
+                    axios.put(path)
+                        .then(response => this.eva = response.data)
+                        .catch(e => this.$message.error(e.response.data))
+                },
+
+                backeva:function(){
+                    window.location.href = "tutor_classeva.html?account=" + this.tutor.userId + '&cClassId=' + this.cClassId
+
+                },
+                IsChecked: function (account) {
+                    var path = '/api/Message/checked?id=' + account
+                    axios.get(path)
+                        .then(response => vue.changeImage(response.data))
+                        .catch(e => this.$message.error(e.response.data))
+
+
+                 },
+                 changeImage: function (b) {
+                    if (b == false) {
+                        this.ImageSrc = "./file/unchecked_message.png"
+                    }
+                },
+
+                getF2B1: function () {
+                    var path = '/api/StudentCourseMark/getGrades';
+                    var userId = this.eva.userId;
+                    var courseType = '专业必修课';
+                    var grade = this.eva.grade;
+
+                    var semester = "all";
+                    console.log(153543453)
+                    path += '?userId=' + userId + '&grade=' + grade + '&semester=' + semester + '&classType=' + courseType
+                    console.log(this.classType);
+                    axios.get(path)
+                        .then(response => {
+                            // 请求成功的处理逻辑
+                            console.log("必修课", response);
+                            this.eva_F2B1 = response.data;
+                        })
+                        .catch(error => {
+                            // 请求失败的处理逻辑
+                            console.error(error);
+                        });
+                },
+                getF2B2: function () {
+                    var path = '/api/StudentCourseMark/getGrades';
+                    var userId = this.eva.userId;
+                    var courseType = '专业选修课';
+                    var grade = this.eva.grade;
+                    var semester = "all";
+                    path += '?userId=' + userId + '&grade=' + grade + '&semester=' + semester + '&classType=' + courseType
+                    console.log(this.classType);
+                    axios.get(path)
+                        .then(response => {
+                            // 请求成功的处理逻辑
+                            console.log("选修课", response);
+                            this.eva_F2B2 = response.data;
+                        })
+                        .catch(error => {
+                            // 请求失败的处理逻辑
+                            console.error(error);
+                        });
+                }
+
+             }
+        });
+        vue.getParams();
+
+    </script>
+    </html>
+

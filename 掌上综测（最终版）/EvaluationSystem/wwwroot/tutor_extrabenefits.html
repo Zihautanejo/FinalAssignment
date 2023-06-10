@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <title>加分申请</title>
+    <!--引入 element-ui 的样式，-->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 必须先引入vue，  后使用element-ui -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- 引入element 的组件库-->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <style>
+        /*dfy：新的页面可以复制style里面的*/
+        .top {
+            border: #797979;
+            background-color: #C5CFC4;
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin:auto;
+        }
+        .title {
+            display: flex;
+            align-items: center;
+        }
+        h3 {
+            margin: auto;
+            margin-left: 20px;
+            color: #797979;
+        }
+
+        .el-menu .el-menu-item:hover {
+            outline: 0 !important;
+            color: #fff !important;
+            background: #899C88 !important;
+        }
+
+        .el-menu .el-menu-item.is-active {
+            color: #fff !important;
+            background: #899C88 !important;
+        }
+        .blank {
+            position: relative;
+            width: 78%;
+        }
+
+        .self {
+            display: flex;
+            align-items: center;
+        }
+
+        .avatar {
+            border-radius: 50%;
+            height: 50px;
+            margin: 10px;
+        }
+
+        .name {
+            color: #797979;
+        }
+
+        .message {
+            width: 20px;
+            margin: auto;
+            margin-left: 15px;
+        }
+
+        .left {
+            width: 233px !important;
+            background-color: #E6E6E6;
+            height: 100vh;
+        }
+
+        /*------------这里之前的style都是导航栏相关的，如果要用需要复制------------------*/
+
+        .el-button--success {
+            border-color: #899C88 !important;
+            background: #899C88 !important;
+        }
+
+            .el-button--success:hover {
+                background: #899C88 !important;
+                border-color: #899C88 !important;
+                color: #FFF !important;
+                opacity: 0.8;
+            }
+
+        .stu_mark {
+            left: 0px;
+            top: 80px;
+            width: 241px;
+            height: 50px;
+        }
+
+        .center {
+            background-color: #F2F2F2;
+        }
+
+        .center_top {
+            margin: 15px;
+            padding-left: 20px;
+            padding-right: 20px;
+            display: flex;
+            align-items: center;
+           justify-content: space-between;
+            background-color: #FFFFFF;
+            border: #797979;
+            border-radius: 5px;
+        }
+        .el-card {
+            margin: 15px;
+        }
+
+        .center_middle {
+            display: flex;
+            align-items: center;
+        }
+        .select{
+            width: 20%;
+            margin-right:20px;
+        }
+        .bigAvatar {
+            height: 270px;
+            border-radius: 50%;
+            margin:30px;
+        }
+        span{
+        }
+       
+        a {
+            text-decoration: none;
+        }
+
+        div.stu_mark:hover {
+            background-color: #899C88;
+        }
+
+        .btn {
+            transform: scale(1);
+        }
+
+            .btn:active {
+                transform: scale(0.97);
+            }
+        .info-left {
+            margin-left: 40px;
+        }
+      
+
+    </style>
+</head>
+<body>
+    <div id="tutorinfoPage">
+
+        <el-container class="container">
+            <el-header class="top" height="70px">
+                <div class="title" width="250px">
+                    <img src="./file/logo.png" class="logo">
+                    <h3>掌上综测</h3>
+                </div>
+                <div class="blank"></div>
+                <div class="self">
+                    <a v-bind:href="['tutor_selfinfo.html?account='+user.userId]">
+                        <img src="./file/photo.jpg" alt="photo" class="avatar">
+                    </a>
+                    <p class="name">{{user.name}}</p>
+                    <a v-bind:href="['tutor_message.html?account='+user.userId]">
+                        <img :src="ImageSrc" alt="message" class="message">
+                    </a>
+                </div>
+            </el-header>
+            <el-container>
+                <el-aside class="left">
+                    <el-row>
+                        <el-col>
+                            <el-menu default-active="2"
+                                     class="el-menu-vertical-demo"
+                                     background-color="#E6E6E6"
+                                     active-text-color="#fff">  
+                                <el-menu-item index="1" @click="routeTo('tutor_stugrade')">
+                                    <span slot="title">学生成绩</span>
+                                </el-menu-item>
+                                <el-menu-item index="2" @click="routeTo('tutor_extrabenefits')">
+                                    <span slot="title">加分申请</span>
+                                </el-menu-item>
+                                <el-menu-item index="3" @click="routeTo('tutor_comeva')">
+                                    <span slot="title">综测管理</span>
+                                </el-menu-item>
+                                <el-menu-item index="4" @click="routeTo('tutor_selfinfo')">
+                                    <span slot="title">个人信息</span>
+                                </el-menu-item>
+                            </el-menu>
+                        </el-col>
+                    </el-row>
+                </el-aside>
+                
+                <el-main class="center">
+                    <div>
+                        <div class="center_top">
+                            <h1>加分申请</h1>
+                            <el-button type="success" 
+                                       size="mini" 
+                                       onclick="javascript:location.reload()"
+                                       class="updatebtn">
+                            刷新</el-button>
+                        </div>
+
+                        <el-card>
+                            <div class="center_middle">
+                                <!-- <span slot="title">专业</span> -->
+                                <el-select class="select" v-model="major" placeholder="请选择查询专业" size="medium" >
+                                    <el-option label="全部" value="all"> </el-option>
+                                    <el-option label="计算机科学与技术" value="计算机科学与技术"></el-option>
+                                    <el-option label="软件工程" value="软件工程"></el-option>
+                                    <el-option label="人工智能" value="人工智能"></el-option>
+                                </el-select>
+                               
+                                <!-- <span slot="title">年级</span> -->
+                                <el-select class="select" v-model="grade" placeholder="请选择查询年级" size="medium">
+                                    <el-option label="全部" value="all"> </el-option>
+                                    <el-option label="2021-2022学年" value="2021-2022学年"></el-option>
+                                    <el-option label="2022-2023学年" value="2022-2023学年"></el-option>
+                                    
+                                </el-select>
+                              
+                                <!-- <span slot="title">状态</span> -->
+                                <el-select class="select" v-model="status" placeholder="请选择加分项状态" size="medium">
+                                    <el-option label="全部" value="all"> </el-option>
+                                    <el-option label="待审核" value="待审核"></el-option>
+                                    <el-option label="已通过" value="已通过"></el-option>
+                                    <el-option label="已驳回" value="已驳回"></el-option>
+                                    
+                                </el-select>
+                                
+                                <!-- <span slot="title">类型</span> -->
+                                <el-select class="select" v-model="type" placeholder="请选择加分项类型" size="medium">
+                                    <el-option label="全部" value="all"></el-option>
+                                        <el-option label="发表学术论文及文学、艺术、新闻等作品(C1)" value="C1"></el-option>
+                                        <el-option label="科技发明与大学生科研(C2)" value="C2"></el-option>
+                                        <el-option label="学科竞赛与文体竞赛(C3)" value="C3"></el-option>
+                                        <el-option label="社会活动与社会时间(C4)" value="C4"></el-option>
+                                        <el-option label="资格认证及创业(C5)" value="C5"></el-option>
+                                    
+                                </el-select>
+                
+                            </div>
+                            <div class="table">
+                                <el-table style="width: 1300px;" :data="benefits"  :fit="true" :show-header="true">
+                                   
+                                    <el-table-column prop="extraBenefitId" label="序号" >
+                                    </el-table-column>
+                                    <el-table-column prop="benefitPoint" label="申请加分" >
+                                    </el-table-column>
+                                    <el-table-column prop="benefitType" label="加分类型">
+                                    </el-table-column>
+                                    <el-table-column prop="studentName" label="申请人姓名">
+                                    </el-table-column>
+                                    <el-table-column prop="stuId" label="申请人学号">
+                                    </el-table-column>
+                                    <el-table-column prop="updateTime" label="申请时间">
+                                    </el-table-column>
+                                    <el-table-column prop="benefitStatus" label="审批状态">
+                                        <template slot-scope="scope">
+                                            <el-tag v-show="scope.row.benefitStatus=='待审核'" type="info">待审核</el-tag>
+                                            <el-tag v-show="scope.row.benefitStatus=='已通过'" type="success">已通过</el-tag>
+                                            <el-tag v-show="scope.row.benefitStatus=='已驳回'" type="danger">已驳回</el-tag>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="操作" fixed="right" width="200px">
+                                        <template slot-scope="scope">
+                                            <el-button mc-type="column-el-button" size="mini"  @click="showEdit(scope.row)">详情</el-button>
+                                        </template>
+                                    </el-table-column>
+                                   
+                                    
+                                   
+                            
+                    
+                                </el-table>
+                                <el-button @click="query" style="margin-left: 700px;margin-top:20px;background-color: #899C88;color: #E6E6E6;">查询</el-button>
+                            </div>  
+                        </el-card>
+                        <div class="dialog">
+                            <el-dialog :visible.async="dialogVisible" width="70%" @close="dialogVisible=false">
+                                <template v-slot:title>
+                                    {{ currentbenefit.studentName }}的加分申请详情
+                                  </template>
+                                <el-form label-width="100px" label-position="left">
+                                    <el-form-item label="加分主题：">
+                                        {{currentbenefit.benefitTheme}}
+                                     </el-form-item>
+                                     <el-form-item label=" 加分类型：">
+                                        {{currentbenefit.benefitType}}
+                                     </el-form-item>
+                                     <el-form-item label="  奖励分数：">
+                                        {{currentbenefit.benefitPoint}}
+                                     </el-form-item>
+                                     <el-form-item label=" 奖励时间：">
+                                        {{currentbenefit.benefitTime}}
+                                     </el-form-item>
+                                     <el-form-item label=" 证明材料:">
+                                         <img :src="this.currentbenefit.proofFile" alt="Image" width="150px" height="150px">
+                                     </el-form-item>
+                                     <el-form-item label=" 备注:">
+                                       
+                                        {{currentbenefit.benefitNote}}
+                                     </el-form-item>
+                                     <el-form-item style="text-align: right;">
+                                        <div style="display: flex; justify-content: flex-end;">
+                                            <el-button @click="cancel" >取 消</el-button>
+                                            <el-button  @click="refuse" type="danger">驳回</el-button>
+                                            <el-button @click="Success" type="success"style="background-color: #899C88;">通过申请</el-button>
+                                        </div>
+                                    </el-form-item>
+                                 
+                                  
+                                  
+                                  
+                                    
+                                    
+                                </el-form>
+                            </el-dialog>
+                            <div class="dialog2">
+                                <el-dialog title="驳回理由" :visible.async="dialog2Visible" width="50%"@close="dialog2Visible=false;message.content=''">
+                                    <el-form label-width="100px" label-position="left" style="text-align: center;">
+                                      
+                                        <el-form-item style="text-align: right;">
+                                            <el-input type="text" v-model.text="message.content" placeholder="请输入驳回理由">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item style="text-align: right;">
+                                            <div style="display: flex; justify-content: flex-end;">
+                                                <el-button @click="UnsuccessCancel" >取 消</el-button>      
+                                                <el-button @click="CommitMessageUnSuccess" type="success"style="background-color: #899C88;">提交</el-button>
+                                            </div>
+                                    </el-form>
+                                </el-dialog>
+                            </div>
+                        </div>
+                    </div>
+                </el-main>
+            </el-container>
+        </el-container>
+        
+
+        
+    </div>
+       
+
+        
+</body>
+<script>
+    var vue=new Vue({
+        el:'#tutorinfoPage',
+        data:{
+            tutor: {},
+            account:"",
+            user: {},    
+            currentbenefit:{},  
+            benefits:[],
+            major:"",
+            message:{},
+            grade:"",
+            status:"",
+            type:"",
+            dialogVisible:false,
+            dialog2Visible: false,
+            ImageSrc: "./file/checked_message.png"
+
+           
+        },
+        created() {
+            this.initialCreate();
+        },
+       
+
+        methods: {
+            cancel: function () {
+
+                this.dialogVisible = false
+            },
+
+            //导航栏相关跳转，需要复制
+            routeTo: function (path) {
+                this.initialCreate();
+                var fullpath = path + ".html?account=" + this.tutor.userId;
+                window.location.href = fullpath;
+            },
+            initialCreate: function () {
+                var url = location.search
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for (var i = 0; i < strs.length; i++) {
+                        theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                    }
+                }
+                this.tutor = { userId: theRequest.account };
+            },
+             //----------------------
+
+            getParams: function () {
+                vue.getInfo(this.tutor.userId);
+                vue.getUser(this.tutor.userId);
+                vue.getAllBenefits(this.tutor.userId);
+                vue.IsChecked(this.tutor.userId);
+
+            },
+           
+            getInfo: function (account) {
+                var path = '/api/User/tutor';
+                if (account != null) path = path + '?id=' + account;
+                axios.get(path)
+                    .then(response => this.tutor = response.data)
+                    .catch(e => this.$message.error(e.response.data))
+
+            },
+            getUser: function (account) {
+                var path = '/api/User/' + account
+                axios.get(path)
+                    .then(response => this.user = response.data)
+                    .catch(e => this.$message.error(e.response.data))
+            },
+            jump: function () {
+                window.location.href = '/tutor_stuinfo.html?' + 'account=' + this.user.userId
+
+            },
+            UnsuccessCancel: function () {
+               
+                this.dialog2Visible = false;
+            },
+            refuse: function () {
+               
+                this.dialog2Visible = true
+            },
+            CommitMessageUnSuccess: function () {
+                this.dialog2Visible = false
+                this.dialogVisible = false
+                this.message.senderID = this.user.userId
+                this.message.senderName = this.user.name
+                this.message.receiverID = this.currentbenefit.stuId
+                this.message.content = "加分项申请" + this.currentbenefit.benefitTheme + "未通过，驳回理由：" + this.message.content
+                var time = new Date().toISOString();
+                var index = time.indexOf('T')
+                this.message.time = time.slice(0, index)
+                var path = '/api/Message'
+                axios.post(path, this.message)
+                    .then(response => {
+                        // 请求成功的处理逻辑
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        // 请求失败的处理逻辑
+                        console.error(error);
+                    });
+
+
+                //修改加分项的状态
+                this.currentbenefit.benefitStatus = "已驳回"
+                var path = "/api/ExtraBenefit/" + this.currentbenefit.extraBenefitId
+                axios.put(path, this.currentbenefit)
+                    .then(response => { })
+                    .catch(e => this.$message.error(e.response.data))
+
+                
+
+            },
+            //修改加分项状态为已通过
+            Success: function () {
+                this.currentbenefit.benefitStatus = "已通过"
+                var path = "/api/ExtraBenefit/" + this.currentbenefit.extraBenefitId
+                axios.put(path, this.currentbenefit)
+                    .then(response => { })
+                    .catch(e => this.$message.error(e.response.data))
+
+                //增加消息
+                this.message.senderID = this.user.userId
+                this.message.senderName = this.user.name
+                this.message.receiverID = this.currentbenefit.stuId
+                this.message.content = "加分项申请" + this.currentbenefit.benefitTheme + "通过！";
+                var time = new Date().toISOString();
+                var index = time.indexOf('T')
+                this.message.time = time.slice(0, index)
+                var path = '/api/Message'
+                axios.post(path, this.message)
+                    .then(response => {
+                        // 请求成功的处理逻辑
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        // 请求失败的处理逻辑
+                        console.error(error);
+                    });
+                this.message.content=""
+                this.dialogVisible = false
+            },
+            getAllBenefits:function(account){
+                var path='/api/ExtraBenefit/tutorid?id='+account;
+                axios.get(path)
+                .then(response=>this.benefits=response.data)
+                .catch(e=>this.$message.error(e.response.data))
+            },
+            showEdit: function (benefit) {
+                this.currentbenefit = benefit
+                this.dialogVisible = true
+
+            },
+
+            query: function () {
+                var path = '/api/ExtraBenefit/query/tutor?id=' + this.user.userId
+                if (this.type != "" && this.type != "all") {
+                    if (this.status != "" && this.status != "all") {
+                        if (this.grade != "" && this.grade != "all") {
+                            if (this.major != "" && this.major != "all") {
+                                var emajor = encodeURIComponent(this.major)
+                                path = path + "&major=" + emajor
+                            }
+                            var egrade = encodeURIComponent(this.grade)
+                            path = path + "&grade=" + egrade
+                        }
+                        else {
+                            if (this.major != "" && this.major != "all") {
+                                var emajor = encodeURIComponent(this.major)
+                                path = path + "&major=" + emajor
+                            }
+                        }
+                        var estatus = decodeURIComponent(this.status)
+                        path = path + "&status=" + estatus
+                    }
+                    else {
+                        if (this.grade != "" && this.grade != "all") {
+                            if (this.major != "" && this.major != "all") {
+                                var emajor = encodeURIComponent(this.major)
+                                path = path + "&major=" + emajor
+                            }
+                            var egrade = encodeURIComponent(this.grade)
+                            path = path + "&grade=" + egrade
+                        }
+                        else {
+                            if (this.major != "" && this.major != "all") {
+                                var emajor = encodeURIComponent(this.major)
+                                path = path + "&major=" + emajor
+                            }
+                        }
+                    }
+                    path = path + "&type=" + this.type
+                }
+                else {
+                    if (this.status != "" && this.status != "all") {
+                        if (this.grade != "" && this.grade != "all") {
+                            if (this.major != "" && this.major != "all") {
+                                var emajor = encodeURIComponent(this.major)
+                                path = path + "&major=" + emajor
+                            }
+                            var egrade = encodeURIComponent(this.grade)
+                            path = path + "&grade=" + egrade
+                        }
+                        else {
+                            if (this.major != "" && this.major != "all") {
+                                var emajor = encodeURIComponent(this.major)
+                                path = path + "&major=" + emajor
+                            }
+                        }
+                        var estatus = decodeURIComponent(this.status)
+                        path = path + "&status=" + estatus
+                    }
+                    else {
+                        if (this.grade != "" && this.grade != "all") {
+                            if (this.major != "" && this.major != "all") {
+                                var emajor = encodeURIComponent(this.major)
+                                path = path + "&major=" + emajor
+                            }
+                            var egrade = encodeURIComponent(this.grade)
+                            path = path + "&grade=" + egrade
+                        }
+                        else {
+                            if (this.major != "" && this.major != "all") {
+                                var emajor = encodeURIComponent(this.major)
+                                path = path + "&major=" + emajor
+                            }
+                        }
+                    }
+                }
+                axios.get(path)
+                    .then(response => this.benefits = response.data)
+                    .catch(e => this.$message.error(e.response.data))
+
+            },
+            IsChecked: function (account) {
+                var path = '/api/Message/checked?id=' + account
+                axios.get(path)
+                    .then(response => vue.changeImage(response.data))
+                    .catch(e => this.$message.error(e.response.data))
+
+
+            },
+            changeImage: function (b) {
+                if (b == false) {
+                    this.ImageSrc = "./file/unchecked_message.png"
+                }
+            }
+            
+           
+        }
+    
+
+    })
+    vue.getParams();
+</script>
+</html>

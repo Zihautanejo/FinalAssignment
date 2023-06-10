@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生成绩</title>
+    <!--引入 element-ui 的样式，-->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 必须先引入vue，  后使用element-ui -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- 引入element 的组件库-->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <style>
+        .top {
+            border: #797979;
+            background-color: #C5CFC4;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin: auto;
+        }
+
+        .title {
+            display: flex;
+            align-items: center;
+        }
+
+        h3 {
+            margin: auto;
+            margin-left: 20px;
+            color: #797979;
+        }
+
+        .el-menu .el-menu-item:hover {
+            outline: 0 !important;
+            color: #fff !important;
+            background: #899C88 !important;
+        }
+
+        .el-menu .el-menu-item.is-active {
+            color: #fff !important;
+            background: #899C88 !important;
+        }
+
+        .blank {
+            position: relative;
+            width: 78%;
+        }
+
+        .self {
+            display: flex;
+            align-items: center;
+        }
+
+        .avatar {
+            border-radius: 50%;
+            height: 50px;
+            margin: 10px;
+        }
+
+        .name {
+            color: #797979;
+        }
+
+        .message {
+            width: 20px;
+            margin: auto;
+            margin-left: 15px;
+        }
+
+        .left {
+            width: 233px !important;
+            background-color: #E6E6E6;
+        }
+
+        .updatebar {
+            margin: 15px;
+            padding-left: 20px;
+            padding-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #FFFFFF;
+            border: #797979;
+            border-radius: 5px;
+        }
+
+        .el-button--success {
+            border-color: #899C88 !important;
+            background: #899C88 !important;
+        }
+
+            .el-button--success:hover {
+                background: #899C88 !important;
+                border-color: #899C88 !important;
+                color: #FFF !important;
+                opacity: 0.8;
+            }
+
+        .el-main {
+            background-color: #F2F2F2;
+        }
+
+        .el-card {
+            margin: 15px;
+            padding-left: 20px;
+        }
+
+        .basicInfo {
+            margin-top: 0px;
+        }
+
+        .el-col {
+            height: 50px;
+        }
+
+        .query {
+            margin-bottom: 20px;
+            display: flex;
+        }
+
+        .el-select {
+            width: 150px;
+            margin-right:30px;
+        }
+
+        .keywordQuery {
+            display: flex;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="stumarkPage">
+        <el-container class="container">
+            <el-header class="top" height="70px">
+                <div class="title" width="250px">
+                    <img src="./file/logo.png" class="logo">
+                    <h3>掌上综测</h3>
+                </div>
+                <div class="blank"></div>
+                <div class="self">
+                    <a v-bind:href="['stu_selfinfo.html?account='+user.userId]">
+                        <img src="./file/photo.jpg" alt="photo" class="avatar">
+                    </a>
+                    <p class="name">{{user.name}}</p>
+                    <a v-bind:href="['stu_message.html?account='+user.userId]">
+                        <img :src="ImageSrc" alt="message" class="message">
+                    </a>
+                </div>
+            </el-header>
+            <el-container>
+                <el-aside class="left">
+                    <el-row>
+                        <el-col>
+                            <el-menu default-active="1"
+                                     class="el-menu-vertical-demo"
+                                     background-color="#E6E6E6"
+                                     active-text-color="#fff">
+
+                                <el-menu-item index="1" @click="routeTo('stu_mark')">
+                                    <span slot="title">成绩信息</span>
+                                </el-menu-item>
+                                <el-menu-item index="2" @click="routeTo('stu_extrabenefit')">
+                                    <span slot="title">我的加分</span>
+                                </el-menu-item>
+                                <el-menu-item index="3" @click="routeTo('stu_eva')">
+                                    <span slot="title">综测管理</span>
+                                </el-menu-item>
+                                <el-menu-item index="4" @click="routeTo('stu_selfinfo')">
+                                    <span slot="title">个人信息</span>
+                                </el-menu-item>
+                            </el-menu>
+                        </el-col>
+                    </el-row>
+                </el-aside>
+
+                <el-main>
+                    <div class="updatebar">
+                        <h1>个人成绩</h1>
+                        <el-button type="success"
+                                   size="mini"
+                                   @click="update"
+                                   class="updatebtn">
+                            刷新
+                        </el-button>
+                    </div>
+                    <el-card class="stuPoint">
+                        <div class="name">
+                            <h1>{{user.name}}同学</h1>
+                        </div>
+                        <div>
+                            <el-row>
+                                <el-col :span="12">
+                                    <p class="basicInfo">
+                                        毕业所需学分 ：{{ stumarkInfoForm.totalNeedPoint }}
+                                    </p>
+                                </el-col>
+                                <el-col :span="12">
+                                    <p class="basicInfo">
+                                        目前修得学分 ：{{ stumarkInfoForm.totalTakePoint }}
+                                    </p>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+
+                                    <p class="basicInfo">
+                                        专业必修课学分 ：{{ stumarkInfoForm.majorCompulsoryTakePoint }} / {{stumarkInfoForm.majorCompulsoryNeedPoint}}
+                                    </p>
+
+                                </el-col>
+                                <el-col :span="12">
+
+                                    <p class="basicInfo">
+                                        专业选修课学分 ：{{ stumarkInfoForm.majorSelectiveTakePoint }} / {{stumarkInfoForm.majorSelectiveNeedPoint}}
+                                    </p>
+
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <p class="basicInfo">
+                                        公共基础课程学分 ：{{ stumarkInfoForm.basicCourseTakePoint }} / {{stumarkInfoForm.basicCourseNeedPoint}}
+                                    </p>
+
+                                </el-col>
+                                <el-col :span="12">
+
+                                    <p class="basicInfo">
+                                        基础通识教育课程学分 ：{{ stumarkInfoForm.generalCourseTakePoint }} / {{stumarkInfoForm.generalCourseNeedPoint}}
+                                    </p>
+
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+
+                                    <p class="basicInfo">
+                                        艺术体验与审美鉴赏模块学分 ：{{ stumarkInfoForm.generalArtFieldTakePoint }}
+                                    </p>
+
+                                </el-col>
+                                <el-col :span="12">
+
+                                    <p class="basicInfo">
+                                        中华文化与世界文明模块学分 ：{{ stumarkInfoForm.generalCurtureFieldTakePoint }}
+                                    </p>
+
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+
+                                    <p class="basicInfo">
+                                        社会科学与当代社会模块学分 ：{{ stumarkInfoForm.generalSocietyFieldTakePoint }}
+                                    </p>
+
+                                </el-col>
+                                <el-col :span="12">
+
+                                    <p class="basicInfo">
+                                        科学精神与生命关怀模块学分 ：{{ stumarkInfoForm.generalScienceFieldTakePoint }}
+                                    </p>
+
+                                </el-col>
+                            </el-row>
+
+                        </div>
+                    </el-card>
+
+                    <el-card class="stuGPA">
+                        <div class="GPA">
+                            <h1>总平均绩点：{{stumarkInfoForm.gpa}}</h1>
+                        </div>
+                        <div>
+                            <el-row>
+                                <el-col :span="12">
+                                    <p class="basicInfo">
+                                        专业必修课平均绩点 ：{{ stumarkInfoForm.majorCompulsoryGPA }}
+                                    </p>
+                                </el-col>
+                                <el-col :span="12">
+                                    <p class="basicInfo">
+                                        专业选修课平均绩点 ：{{ stumarkInfoForm.majorSelectiveGPA }}
+                                    </p>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+
+                                    <p class="basicInfo">
+                                        优势科目 ：{{ stumarkInfoForm.strongSubjects }}
+                                    </p>
+
+                                </el-col>
+                                <el-col :span="12">
+
+                                    <p class="basicInfo">
+                                        需要加强的科目 ：{{ stumarkInfoForm.weakSubjects }}
+                                    </p>
+
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <p class="basicInfo">
+                                        挂科的科目 ：{{ stumarkInfoForm.failSubjects }}
+                                    </p>
+
+                                </el-col>
+
+                            </el-row>
+                        </div>
+                    </el-card>
+
+                    <el-card class="markDetail">
+                        <div class="query">
+                            <div class="classType">
+                                <span>课程类型 </span>
+                                <el-select v-model="query.classType" placeholder="请选择">
+                                    <el-option v-for="item in classTypeOpt"
+                                               :key="item.value"
+                                               :label="item.label"
+                                               :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </div>
+                            <div class="grade">
+                                <span>年级 </span>
+                                <el-select v-model="query.grade" placeholder="请选择">
+                                    <el-option v-for="item in gradeOpt"
+                                               :key="item.value"
+                                               :label="item.label"
+                                               :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </div>
+                            <div class="semester">
+                                <span>学期 </span>
+                                <el-select v-model="query.semester" placeholder="请选择">
+                                    <el-option v-for="item in semesterOpt"
+                                               :key="item.value"
+                                               :label="item.label"
+                                               :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </div>
+                            <div class="keywordQuery">
+                                <el-input v-model="query.input" placeholder="请输入内容" style="width:250px;margin-right:10px;margin-left:10px;"></el-input>
+                            </div>
+                            <!--
+                               <el-button type="success" size="mini" @click="dialogVisible = true;">选择本学期选修课填入综测</el-button> 
+                            -->
+                        </div>
+                        <el-table :data="markData"
+                                  style="width: 100%">
+                            <el-table-column type="index"
+                                             label="序号">
+                            </el-table-column>
+                            <el-table-column prop="courseName"
+                                             label="课程名称"
+                                             width="180">
+                            </el-table-column>
+                            <el-table-column prop="courseType"
+                                             label="课程类型"
+                                             width="180">
+                            </el-table-column>
+                            <el-table-column prop="coursePoint"
+                                             label="课程学分">
+                            </el-table-column>
+                            <el-table-column prop="stuMark"
+                                             label="学科成绩">
+                            </el-table-column>
+                            <el-table-column prop="stuGradePoint"
+                                             label="学科绩点">
+                            </el-table-column>
+                            <el-table-column prop="grade"
+                                             label="修读年级">
+                            </el-table-column>
+                            <el-table-column prop="semester"
+                                             label="修读学期">
+                            </el-table-column>
+                            <el-table-column prop="isRetook"
+                                             label="备注信息">
+                                <template scope="scope">
+                                    <p v-if="scope.row.isRetook == true">重修</p>
+                                    <p v-else>暂无</p>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <!--分页器-->
+                        <br />
+                        <el-pagination class="projectPagePagination"
+                                       style="float: right; margin-top: 20px"
+                                       :hide-on-single-page="true"
+                                       :page-size="10"
+                                       :page-count="totalMarkPages"
+                                       :current-page="currentMarkPage"
+                                       @current-change="getStuMarkList"
+                                       layout="prev, pager, next" />
+                        <br /><br />
+                    </el-card>
+
+                    <el-dialog title="选择本学期选修课程导入综测" :visible.async="dialogVisible" width="70%" @close="dialogVisible=false">
+                        <el-form label-width="100px" label-position="left">
+                            <el-table :data="markSelectData"
+                                      ref="markSelectData"
+                                      style="width: 100%">
+                                <el-table-column type="index"
+                                                 label="序号">
+                                </el-table-column>
+                                <el-table-column prop="courseName"
+                                                 label="课程名称"
+                                                 width="180">
+                                </el-table-column>
+                                <el-table-column prop="coursePoint"
+                                                 label="课程学分">
+                                </el-table-column>
+                                <el-table-column prop="stuMark"
+                                                 label="学科成绩">
+                                </el-table-column>
+                                <el-table-column label="选择"
+                                                 type="selection">
+                                </el-table-column>
+                            </el-table>
+                            <el-form-item style="text-align: right;">
+                                <el-button @click="dialogVisible=false">取 消</el-button>
+                                <el-button type="success" @click="confirmnotation=true">确 定</el-button>
+
+                            </el-form-item>
+                        </el-form>
+
+                    </el-dialog>
+
+                    <el-dialog :visible.async="confirmnotation" width="40%" @close="confirmnotation=false">
+                        <p>确认要添加到综测表吗？</p>
+                        <div style="text-align: right;">
+                            <el-button @click="confirmnotation=false">取 消</el-button>
+                            <el-button type="success" @click="addSelectivCourse">确 定</el-button>
+                        </div>
+                    </el-dialog>
+                </el-main>
+
+
+
+            </el-container>
+        </el-container>
+    </div>
+</body>
+<script>
+    var vue = new Vue({
+        el: '#stumarkPage',
+        data: {
+            student: {},
+            account: "",
+            user: "",
+            totalMarkPages: 1,
+            currentMarkPage: 1,
+            dialogVisible: false,
+            confirmnotation: false,
+            stumarkInfoForm: [],
+            ImageSrc: "./file/checked_message.png",
+
+            /*name: "xxx",
+            id: "",
+            totalNeedPoint: 0,
+            totalTakePoint: 0,
+            totalMajorCompulsoryTakePoint: 0,
+            totalMajorCompulsoryNeedPoint: 0,
+            totalMajorSelectiveTakePoint: 0,
+            totalMajorSelectiveNeedPoint: 0,
+            totalBasicTakePoint: 0,
+            totalBasicNeedPoint: 0,
+            totalGeneralTakePoint: 0,
+            totalGeneralNeedPoint: 0,
+            artTakePoint: 0,
+            scienceTakePoint: 0,
+            societyTakePoint: 0,
+            cultureTakePoint: 0,*/
+
+            stuGPAForm: {
+                GPA: 3.0,
+                majorCompulsoryGPA: 3.0,
+                majorSelectiveGPA: 3.0,
+                bestSubject: "",
+                worstSubject: "",
+                failedSubject: ""
+            },
+            markData: [],
+            markSelectData: [],
+            query: {
+                classType: 'all',
+                grade: 'all',
+                semester: 'all',
+                input: ""
+            },
+            classTypeOpt: [
+                {
+                    value: 'all',
+                    label: '全部'
+                },
+                {
+                    value: '公共基础课',
+                    label: '公共基础课'
+                },
+                {
+                    value: '专业必修课',
+                    label: '专业必修课'
+                },
+                {
+                    value: '专业选修课',
+                    label: '专业选修课'
+                },
+                {
+                    value: '通识教育课',
+                    label: '通识教育课'
+                }
+            ],
+
+            gradeOpt: [
+                {
+                    value: 'all',
+                    label: '全部'
+                },
+                {
+                    value: '2021-2022学年',
+                    label: '2021-2022学年'
+                },
+                {
+                    value: '2022-2023学年',
+                    label: '2022-2023学年'
+                },
+                {
+                    value: '2023-2024学年',
+                    label: '2023-2024学年'
+                },
+                {
+                    value: '2024-2025学年',
+                    label: '2024-2025学年'
+                }
+            ],
+
+            semesterOpt: [
+                {
+                    value: 'all',
+                    label: '全部'
+                },
+                {
+                    value: '上学期',
+                    label: '上学期'
+                },
+                {
+                    value: '下学期',
+                    label: '下学期'
+                },
+                {
+                    value: '第三学期',
+                    label: '第三学期'
+                }
+            ],
+            B1Data: [],
+            comeva:[]
+
+
+        },
+
+        mounted() {
+            this.getParams();
+            this.update();
+        },
+        watch: {
+            query: {
+                handler() {
+                    this.getMarks();
+                },
+                immediate: true,
+                deep: true
+            },
+
+        },
+        methods: {
+            //导航栏相关跳转，需要复制
+            routeTo: function (path) {
+                this.initialCreate();
+                var fullpath = path + ".html?account=" + this.student.userId;
+                window.location.href = fullpath;
+            },
+            update: function () {
+                this.getMarks();
+                this.getSelectMarks();
+                this.getGradePointConclusion();
+                this.getB1List();
+                this.addB1List();
+            },
+            initialCreate: function () {
+                var url = location.search
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for (var i = 0; i < strs.length; i++) {
+                        theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                    }
+                }
+                this.student = { userId: theRequest.account };
+            },
+            getParams: function () {
+                var url = location.search
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for (var i = 0; i < strs.length; i++) {
+                        theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                    }
+                }
+                this.student = { userId: theRequest.account };
+                vue.getInfo(this.student.userId);
+                vue.getUser(this.student.userId);
+                this.getMarks();
+                this.getSelectMarks();
+                this.getGradePointConclusion();
+                vue.IsChecked(this.student.userId);
+                //this.addB1List();
+
+            },
+
+            getInfo: function (account) {
+                var path = '/api/User/stu';
+                if (account != null) path = path + '?id=' + account;
+                axios.get(path)
+                    .then(response => {
+                        this.student = response.data;
+                        //this.student.grade = response.data.grade;
+                        //this.getB1List(response.data.grade);
+                    })
+                    .then(() => {
+                        this.getB1List();
+                    })
+                    .then(() => {
+                        this.getMarks();
+                        this.getSelectMarks();
+                        this.getGradePointConclusion();
+                    })
+                    .catch(e => this.$message.error(e.response.data))
+
+            },
+            getUser: function (account) {
+                var path = '/api/User/' + account
+                axios.get(path)
+                    .then(response => this.user = response.data)
+                    .catch(e => this.$message.error(e.response.data))
+            },
+            getMarks: function () {
+                var path = '/api/StudentCourseMark/getGrades';
+                var userId = this.student.userId;
+                var courseType = this.query.classType;
+                var grade = this.query.grade;
+                var semester = this.query.semester;
+                var input = this.query.input;
+
+                path += '?userId=' + userId + '&grade=' + grade + '&semester=' + semester + '&classType=' + courseType + '&input=' + input
+                console.log(this.classType);
+                axios.get(path)
+                    .then(response => {
+                        // 请求成功的处理逻辑
+                        console.log("1111", response);
+                        this.markData = response.data;
+                    })
+                    .catch(error => {
+                        // 请求失败的处理逻辑
+                        console.error(error);
+                    });
+            },
+            getSelectMarks: function () {
+
+                var path = '/api/StudentCourseMark/getGrades';
+                var userId = this.student.userId;
+                var courseType = '专业选修课';
+                var grade = this.student.grade;
+                var semester = this.student.semester;
+                console.log(153543453)
+                path += '?userId=' + userId + '&grade=' + grade + '&semester=' + semester + '&classType=' + courseType
+                console.log(this.classType);
+                axios.get(path)
+                    .then(response => {
+                        // 请求成功的处理逻辑
+                        console.log("000", response);
+                        this.markSelectData = response.data;
+                    })
+                    .catch(error => {
+                        // 请求失败的处理逻辑
+                        console.error(error);
+                    });
+            },
+            getGradePointConclusion: function () {
+                var path = '/api/GradePointConclusion/getGradesConclusion';
+                var userId = this.student.userId;
+                var enrollmentYear = this.student.enrollmentYear;
+                var major = this.student.major;
+                path += '?userId=' + userId + '&EnrollmentYear=' + enrollmentYear + '&major=' + major
+                axios.get(path)
+                    .then(response => {
+                        // 请求成功的处理逻辑
+                        console.log("综合成绩", response);
+                        this.stumarkInfoForm = response.data;
+                    })
+                    .catch(error => {
+                        // 请求失败的处理逻辑
+                        console.error(error);
+                    });
+            },
+            addSelectivCourse: function () {
+                this.confirmnotation = false;
+                // 获取表格
+                const table = this.$refs.markSelectData;
+
+                const data = {
+                    selectedData: table.selection
+                };
+                console.log(data);
+
+                // 发送对象给后端
+                axios.put('/api/ComEva/stuId/addSelectiveCourse?StudentId=' + this.student.userId + "&grade=" + this.student.grade, table.selection)
+                    .then(response => {
+                        console.log(response.data);
+                        this.$message("成功导入综测表", success);
+                        window.location.href = '/stu_eva.html?' + 'account=' + this.user.userId;
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        this.$message.error(error.response.data);
+
+                    });
+            },
+            IsChecked: function (account) {
+                var path = '/api/Message/checked?id=' + account
+                axios.get(path)
+                    .then(response => vue.changeImage(response.data))
+                    .catch(e => this.$message.error(e.response.data))
+
+
+            },
+            changeImage: function (b) {
+                if (b == false) {
+                    this.ImageSrc = "./file/unchecked_message.png"
+                }
+            },
+            getB1List: function () {
+
+                var path = '/api/StudentCourseMark/getGrades';
+                var userId = this.student.userId;
+                var courseType = '专业必修课';
+                var grade = this.student.grade;
+                var semester = this.student.semester;
+                path += '?userId=' + userId + '&grade=' + grade + '&semester=' + semester + '&classType=' + courseType
+                console.log(this.classType);
+                
+                    axios.get(path)
+                        .then(response => {
+                            // 请求成功的处理逻辑
+                            console.log("获取必修课", response);
+                            this.B1Data = response.data;
+                            this.addB1List();
+                        })
+                        .catch(error => {
+                            // 请求失败的处理逻辑
+                            console.error(error);
+                           
+                        });
+
+            },
+            addB1List: function () {
+
+               
+
+                //this.getB1List();
+                console.log("B1", this.B1Data);
+                var userId = this.student.userId;
+                var grade = this.student.grade;
+                console.log(grade);
+                var path = '/api/ComEva/stuId/addRequiredCourse?StudentId=' + userId + '&grade=' + grade;
+                return axios.put(path, { RequiredData: this.B1Data })
+                    .then(response => {
+                        // 请求成功的处理逻辑
+                        console.log("添加必修课到综测表", response);
+                    })
+                    .catch(error => {
+                        // 请求失败的处理逻辑
+                        console.error(error);
+                    });
+                
+            }
+        }
+    });
+    vue.getParams();
+</script>

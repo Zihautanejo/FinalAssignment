@@ -1,0 +1,381 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <title>学生个人信息</title>
+    <!--引入 element-ui 的样式，-->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 必须先引入vue，  后使用element-ui -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- 引入element 的组件库-->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <style>
+        /*dfy：新的页面可以复制style里面的*/
+        .top {
+            border: #797979;
+            background-color: #C5CFC4;
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin:auto;
+        }
+        .title {
+            display: flex;
+            align-items: center;
+        }
+        h3 {
+            margin: auto;
+            margin-left: 20px;
+            color: #797979;
+        }
+
+        .el-menu .el-menu-item:hover {
+            outline: 0 !important;
+            color: #fff !important;
+            background: #899C88 !important;
+        }
+
+        .el-menu .el-menu-item.is-active {
+            color: #fff !important;
+            background: #899C88 !important;
+        }
+        .blank {
+            position: relative;
+            width: 65%;
+        }
+        .titlw {
+            position: relative;
+            width: 20%;
+        }
+        .self {
+            display: flex;
+            align-items: center;
+            position: relative;
+            width: 20%;
+        }
+
+        .avatar {
+            border-radius: 50%;
+            height: 50px;
+            margin: 10px;
+        }
+
+        .name {
+            color: #797979;
+        }
+
+        .message {
+            width: 20px;
+            margin: auto;
+            margin-left: 15px;
+        }
+
+        .left {
+            width: 233px !important;
+            background-color: #E6E6E6;
+            height: 100vh;
+        }
+
+        /*------------这里之前的style都是导航栏相关的，如果要用需要复制------------------*/
+
+        .el-button--success {
+            border-color: #899C88 !important;
+            background: #899C88 !important;
+        }
+
+            .el-button--success:hover {
+                background: #899C88 !important;
+                border-color: #899C88 !important;
+                color: #FFF !important;
+                opacity: 0.8;
+            }
+
+        .stu_mark {
+            left: 0px;
+            top: 80px;
+            width: 241px;
+            height: 50px;
+        }
+
+        .center {
+            background-color: #F2F2F2;
+        }
+
+        .center_top {
+            margin: 15px;
+            padding-left: 20px;
+            padding-right: 20px;
+            display: flex;
+            align-items: center;
+           justify-content: space-between;
+            background-color: #FFFFFF;
+            border: #797979;
+            border-radius: 5px;
+        }
+        .el-card {
+            margin: 15px;
+        }
+
+        .center_middle {
+            display: flex;
+            align-items: center;
+        }
+        .bigAvatar {
+            height: 270px;
+            border-radius: 50%;
+            margin:30px;
+        }
+        span{
+        }
+       
+        a {
+            text-decoration: none;
+        }
+
+        div.stu_mark:hover {
+            background-color: #899C88;
+        }
+
+        .btn {
+            transform: scale(1);
+        }
+
+            .btn:active {
+                transform: scale(0.97);
+            }
+        .info-left {
+            margin-left: 40px;
+        }
+        .info-right {
+            padding-top:40px;
+            margin-left:50px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="stuinfoPage">
+        <!--
+        <div class="top" style="position:absolute;border:#797979;left:0px;top:0px;width:1503px;height: 78px;background-color:#C5CFC4">
+            <div class="logo" style="position: absolute;left:0px;top: 0px;width: 241px;height: 78px;">
+                <img src="./file/whu.png" alt="whu" style="position: absolute;width: 53px;height: 50px;left:21px;top: 15px;">
+                <h1 style="font-size:20px;position: absolute;left: 88px;top: 20px;width: 112px;height: 30px;color: #797979;">掌上综测</h1>
+            </div>
+            <div class="self" style="position: absolute;left:1233px;top:0px;width: 176px;height:78px;">
+                <a v-bind:href="['stu_selfinfo.html?account='+user.userId]">
+                    <img src="./file/photo.jpg" alt="photo" style="position:absolute;border-radius: 50%;width: 50px;height:50px;left:1264;top:15px;">
+                </a>
+                <p style="font-size: 14px;color:#797979;position: absolute;left: 70px;top:15px;width: 81px;height: 13px;">{{user.name}}</p>
+                <a href="stu_message.html">
+                    <img src="./file/message.png" alt="message" style="position:absolute;width: 38px;height: 30px;left:150px;top:24px;">
+                </a>
+            </div>
+        </div>
+
+    <div class="left" style="position: absolute;width: 241px;height:1668px;left:0px;top:78px;background-color: #E6E6E6;">
+        <a href="stu_mark.html" style="color:inherit">
+            <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+              成绩信息
+            </div>
+        </a>
+        <a v-bind:href="['stu_extrabenefit.html?account='+user.userId]" style="color:inherit">
+            <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+              我的加分
+            </div>
+        </a>
+        <a href="stu_eva.html" style="color:inherit">
+            <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+              综测管理
+            </div>
+        </a>
+        <a v-bind:href="['stu_selfinfo.html?account='+user.userId]" style="color:inherit" >
+            <div class="stu_mark" style="font-size: 18px;text-align: center;line-height: 50px;">
+             个人信息
+            </div>
+        </a>
+
+    </div>
+    -->
+
+        <el-container class="container">
+            <el-header class="top" height="70px">
+                <div class="title">
+                    <img src="./file/logo.png" class="logo">
+                    <h3>掌上综测</h3>
+                </div>
+                <div class="blank"></div>
+                <div class="self">
+                    <a v-bind:href="['stu_selfinfo.html?account='+user.userId]">
+                        <img src="./file/photo.jpg" alt="photo" class="avatar">
+                    </a>
+                    <p class="name">{{user.name}}</p>
+                    <a v-bind:href="['stu_message.html?account='+user.userId]">
+                        <img :src="ImageSrc" alt="message" class="message">
+                    </a>
+                </div>
+            </el-header>
+            <el-container>
+                <el-aside class ="left" >
+                    <el-row >
+                        <el-col>
+                            <el-menu default-active="4"
+                                     class="el-menu-vertical-demo"
+                                     background-color="#E6E6E6"
+                                     active-text-color="#fff">
+
+                                <el-menu-item index="1" @click="routeTo('stu_mark')">
+                                    <span slot="title">成绩信息</span>
+                                </el-menu-item>
+                                <el-menu-item index="2" @click="routeTo('stu_extrabenefit')">
+                                    <span slot="title">我的加分</span>
+                                </el-menu-item>
+                                <el-menu-item index="3" @click="routeTo('stu_eva')">
+                                    <span slot="title">综测管理</span>
+                                </el-menu-item>
+                                <el-menu-item index="4" @click="routeTo('stu_selfinfo')">
+                                    <span slot="title">个人信息</span>
+                                </el-menu-item>
+                            </el-menu>
+                        </el-col>
+                    </el-row>
+                </el-aside>
+                
+                <el-main class="center">
+                    <div>
+                        <div class="center_top">
+                            <h1>个人信息</h1>
+                            <el-button type="success" 
+                                       size="mini" 
+                                       onclick="javascript:location.reload()"
+                                       class="updatebtn">
+                            刷新</el-button>
+                        </div>
+
+                        <el-card>
+                            <div class="center_middle">
+                                <img src="./file/photo.jpg" alt="photo" class="bigAvatar">
+                                <div class="info-left">
+                                    <h1>姓名：{{user.name}}</h1>
+                                    <span>学号:&nbsp;{{student.userId}}</span>
+                                    <br><br>
+                                    <span>专业:&nbsp;{{student.major}}</span>
+                                    <br><br>
+                                    <span>入学年份:&nbsp;{{student.enrollmentYear}}</span>
+                                    <br><br>
+                                    <span>当前学期:&nbsp;{{student.grade}}{{student.semester}}</span>
+                                </div>
+                                <div class="info-right">
+                                    <span>性别:&nbsp;{{user.sex}}</span>
+                                    <br><br>
+                                    <span>学院:&nbsp;{{student.academy}}</span>
+                                    <br><br>
+                                    <span>班级:&nbsp;{{student.classId}}班</span>
+                                    <br><br>
+                                </div>
+                                <el-button type="success" @click="quitLogin" style="position:relative;top:-75px;left:70px;">退出登录</el-button>
+</el-card>
+                    </div>
+                </el-main>
+            </el-container>
+        </el-container>
+        
+
+        
+    </div>
+       
+
+        
+</body>
+<script>
+    var vue=new Vue({
+        el:'#stuinfoPage',
+        data:{
+            student: {},
+            account:"",
+            user: {},
+            ImageSrc: "./file/checked_message.png"
+
+        },
+        created() {
+            this.initialCreate();
+        },
+
+        methods: {
+            //导航栏相关跳转，需要复制
+            routeTo: function (path) {
+                this.initialCreate();
+                var fullpath = path + ".html?account=" + this.student.userId;
+                window.location.href = fullpath;
+            },
+            initialCreate: function () {
+                var url = location.search
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for (var i = 0; i < strs.length; i++) {
+                        theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                    }
+                }
+                this.student = { userId: theRequest.account };
+            },
+             //----------------------
+
+            getParams: function () {
+                vue.getInfo(this.student.userId);
+                vue.getUser(this.student.userId);
+                vue.IsChecked(this.student.userId);
+
+            },
+           
+            getInfo:function(account){
+                var path = '/api/User/stu';
+                if(account!=null)path=path+'?id='+account;
+                axios.get(path)
+                .then(response=>this.student=response.data)
+                .catch(e=>this.$message.error(e.response.data))
+                
+            },
+            getUser:function(account){
+                var path='/api/User/'+account
+                axios.get(path)
+                .then(response=>this.user=response.data)
+                .catch(e=>this.$message.error(e.response.data))
+            },
+            jump:function(){
+                window.location.href = '/stu_selfinfo.html?'+'account='+this.user.userId
+                
+            },
+            quitLogin: function () {
+                window.location.href = 'index.html';
+            },
+            IsChecked: function (account) {
+                var path = '/api/Message/checked?id=' + account
+                axios.get(path)
+                    .then(response => vue.changeImage(response.data))
+                    .catch(e => this.$message.error(e.response.data))
+
+
+            },
+            changeImage: function (b) {
+                if (b == false) {
+                    this.ImageSrc = "./file/unchecked_message.png"
+                }
+            }
+            
+           
+        }
+    
+
+    })
+    vue.getParams();
+    
+ 
+</script>
+</html>

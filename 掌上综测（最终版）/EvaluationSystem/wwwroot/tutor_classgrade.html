@@ -1,0 +1,444 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生成绩</title>
+    <!--引入 element-ui 的样式，-->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 必须先引入vue，  后使用element-ui -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- 引入element 的组件库-->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <style>
+        .top {
+            border: #797979;
+            background-color: #C5CFC4;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin: auto;
+        }
+
+        .title {
+            display: flex;
+            align-items: center;
+        }
+
+        h3 {
+            margin: auto;
+            margin-left: 20px;
+            color: #797979;
+        }
+
+        .el-menu .el-menu-item:hover {
+            outline: 0 !important;
+            color: #fff !important;
+            background: #899C88 !important;
+        }
+
+        .el-menu .el-menu-item.is-active {
+            color: #fff !important;
+            background: #899C88 !important;
+        }
+
+        .blank {
+            position: relative;
+            width: 78%;
+        }
+
+        .self {
+            display: flex;
+            align-items: center;
+        }
+
+        .avatar {
+            border-radius: 50%;
+            height: 50px;
+            margin: 10px;
+        }
+
+        .name {
+            color: #797979;
+        }
+
+        .message {
+            width: 20px;
+            margin: auto;
+            margin-left: 15px;
+        }
+
+        .left {
+            width: 233px !important;
+            background-color: #E6E6E6;
+            height: 100vh;
+        }
+
+        .updatebar {
+            margin: 15px;
+            padding-left: 20px;
+            padding-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #FFFFFF;
+            border: #797979;
+            border-radius: 5px;
+        }
+
+        .query {
+            margin-bottom: 20px;
+            display: flex;
+        }
+
+        .el-select {
+            width: 150px;
+            margin-right: 50px;
+        }
+
+        .keywordQuery {
+            display: flex;
+        }
+
+        .el-button--success {
+            border-color: #899C88 !important;
+            background: #899C88 !important;
+        }
+
+            .el-button--success:hover {
+                background: #899C88 !important;
+                border-color: #899C88 !important;
+                color: #FFF !important;
+                opacity: 0.8;
+            }
+
+        .el-main {
+            background-color: #F2F2F2;
+        }
+
+        .el-card {
+            margin: 15px;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="tuclassGradePage">
+        <el-container class="container">
+            <el-header class="top" height="70px">
+                <div class="title" width="250px">
+                    <img src="./file/logo.png" class="logo">
+                    <h3>掌上综测</h3>
+                </div>
+                <div class="blank"></div>
+                <div class="self">
+                    <a v-bind:href="['stu_selfinfo.html?account='+tutor.userId]">
+                        <img src="./file/photo.jpg" alt="photo" class="avatar">
+                    </a>
+                    <p class="name">{{user.name}}</p>
+                    <a v-bind:href="['tutor_message.html?account='+user.userId]">
+                        <img :src="ImageSrc" alt="message" class="message">
+                    </a>
+                </div>
+            </el-header>
+            <el-container>
+                <el-aside class="left">
+                    <el-row>
+                        <el-col>
+                            <el-menu default-active="1"
+                                     class="el-menu-vertical-demo"
+                                     background-color="#E6E6E6"
+                                     active-text-color="#fff">
+                                <el-menu-item index="1" @click="routeTo('tutor_stugrade')">
+                                    <span slot="title">学生成绩</span>
+                                </el-menu-item>
+                                <el-menu-item index="2" @click="routeTo('tutor_extrabenefits')">
+                                    <span slot="title">加分申请</span>
+                                </el-menu-item>
+                                <el-menu-item index="3" @click="routeTo('tutor_comeva')">
+                                    <span slot="title">综测管理</span>
+                                </el-menu-item>
+                                <el-menu-item index="4" @click="routeTo('tutor_selfinfo')">
+                                    <span slot="title">个人信息</span>
+                                </el-menu-item>
+                            </el-menu>
+                        </el-col>
+                    </el-row>
+                </el-aside>
+                <el-main>
+                    <div class="updatebar">
+                        <h1>班级成绩</h1>
+                        <el-button type="success"
+                                   size="mini"
+                                   @click="update"
+                                   class="updatebtn">
+                            刷新
+                        </el-button>
+                    </div>
+                    <el-card class="classGrade">
+                        <h1>{{classInfo.grade}}级 / {{classInfo.major}} / {{classInfo.cclass}}班 </h1>
+                        <div class="query">
+                            <div class="classType">
+                                <span style="margin-right:10px">排序 </span>
+                                <el-select v-model="query.rank" placeholder="请选择">
+                                    <el-option label="按学号排序" value="0"></el-option>
+                                    <el-option label="按平均绩点降序" value="1"></el-option>
+                                    <el-option label="按平均绩点升序" value="2"></el-option>
+                                </el-select>
+                            </div>
+                            <div class="gradeStatus">
+                                <span style="margin-right:10px">学业预警状态 </span>
+                                <el-select v-model="query.gradeStatus" placeholder="请选择">
+                                    <el-option label="全部" value="0"></el-option>
+                                    <el-option label="正常" value="1"></el-option>
+                                    <el-option label="预警" value="2"></el-option>
+                                </el-select>
+                            </div>
+                            <div>
+                                <el-button type="success" @click="routeTo('tutor_stugrade')">返回</el-button>
+                                <el-button type="success" @click="impotDialogVisible=true">导入学生成绩</el-button>
+                            </div>
+                        </div>
+
+                        <el-table :data="classGradeData"
+                                  style="width: 100%">
+                            <el-table-column type="index"
+                                             label="序号">
+                            </el-table-column>
+                            <el-table-column prop="userId"
+                                             label="学号"
+                                             width="180">
+                            </el-table-column>
+                            <el-table-column prop="userName"
+                                             label="姓名"
+                                             width="180">
+                            </el-table-column>
+                            <el-table-column prop="gpa"
+                                             label="平均绩点">
+                            </el-table-column>
+                            <el-table-column prop="gpa"
+                                             label="预警状态">
+                                <template scope="scope">
+                                    <el-tag type="danger" v-if="scope.row.gpa <= 3">预警</el-tag>
+                                    <el-tag v-else>正常</el-tag>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="operation"
+                                             label="操作">
+                                <template slot-scope="scope">
+                                    <el-button size="mini" @click="RouteToStuGradeDetail(scope.row)">详情</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <!--分页器-->
+                        <br />
+                        <el-pagination class="projectPagePagination"
+                                       style="float: right; margin-top: 20px"
+                                       :hide-on-single-page="true"
+                                       :page-size="10"
+                                       :page-count="totalMarkPages"
+                                       :current-page="currentMarkPage"
+                                       @current-change="getStuMarkList"
+                                       layout="prev, pager, next" />
+                        <br /><br />
+                    </el-card>
+                    <el-dialog title="导入成绩"
+                               :visible.sync="impotDialogVisible"
+                               width="30%"
+                               :before-close="handleClose">
+                        <el-upload class="upload-demo"
+                                   action="/api/StudentCourseMark/importGrades"
+                                   :on-success="handleUploadSuccess"
+                                   :before-upload="beforeUpload"
+                                   :show-file-list="true"
+                                   ref="uploadRef"
+                                   accept=".xlsx, .xls">
+                            <el-button slot="trigger" size="small" type="success">选择文件</el-button>
+                            <el-button v-if="!uploading" @click="submitUpload" size="small" type="success">上传</el-button>
+                        </el-upload>
+                    </el-dialog>
+
+                </el-main>
+            </el-container>
+    </div>
+</body>
+<script>
+    var vue = new Vue({
+        el: '#tuclassGradePage',
+        data: {
+            impotDialogVisible: false,
+            tutor: {},
+            account: "",
+            user: {},
+            classGradeData: [],
+            classInfo: {},
+            ImageSrc: "./file/checked_message.png",
+            query: {
+                rank: "0",
+                gradeStatus: "0"
+            },
+            file: null,
+            uploading: false
+
+
+        },
+        watch: {
+            query: {
+                handler() {
+                    this.rankGrade();
+                },
+                immediate: true,
+                deep: true
+            },
+        },
+        methods: {
+            //导航栏相关跳转，需要复制
+            routeTo: function (path) {
+                this.initialCreate();
+                var fullpath = path + ".html?account=" + this.tutor.userId;
+                window.location.href = fullpath;
+            },
+            RouteToStuGradeDetail(row) {
+                var fullpath = "tutor_gradeDetail.html?account=" + this.tutor.userId + "&grade=" + this.classInfo.grade + "&major=" + this.classInfo.major + "&cclass=" + this.classInfo.cclass + "&stuId=" + row.userId;
+                window.location.href = fullpath;
+            },
+            initialCreate: function () {
+                var url = decodeURIComponent(window.location.search);
+                //var url = location.search
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for (var i = 0; i < strs.length; i++) {
+                        theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                    }
+                }
+                this.tutor = { userId: theRequest.account };
+                this.classInfo.grade = theRequest.grade;
+                this.classInfo.major = theRequest.major;
+                this.classInfo.cclass = theRequest.cclass;
+
+            },
+            update: function () {
+                this.initialCreate();
+                this.rankGrade();
+            },
+            getParams: function () {
+                this.initialCreate();
+                vue.getInfo(this.tutor.userId);
+                vue.getUser(this.tutor.userId);
+                this.rankGrade();
+                vue.IsChecked(this.tutor.userId);
+
+            },
+            getInfo: function (account) {
+                var path = '/api/User/tutor';
+                if (account != null) path = path + '?id=' + account;
+                axios.get(path)
+                    .then(response => this.tutor = response.data)
+                    .catch(e => this.$message.error(e.response.data))
+
+            },
+            getUser: function (account) {
+                var path = '/api/User/' + account
+                axios.get(path)
+                    .then(response => this.user = response.data)
+                    .catch(e => this.$message.error(e.response.data))
+            },
+            getClassGrade: function () {
+                var path = '/api/GradePointConclusion/getStuGradesConcluInClass';
+                var grade = this.classInfo.grade;
+                var major = this.classInfo.major;
+                var classnum = this.classInfo.cclass;
+
+
+                path += '?grade=' + grade + '&major=' + major + '&classnum=' + classnum;
+                axios.get(path)
+                    .then(response => {
+                        // 请求成功的处理逻辑
+                        console.log("获取班级成绩综合信息", response);
+                        this.classGradeData = response.data;
+                    })
+                    .catch(error => {
+                        // 请求失败的处理逻辑
+                        console.error(error);
+                    });
+            },
+            rankGrade: function () {
+
+                var grade = this.classInfo.grade;
+                var major = this.classInfo.major;
+                var classnum = this.classInfo.cclass;
+                var gradeStatus = this.query.gradeStatus;
+                var rank = this.query.rank;
+                var path = '/api/GradePointConclusion/query';
+                path += '?grade=' + grade + '&major=' + major + '&classnum=' + classnum + '&rank=' + rank + '&status=' + gradeStatus;
+                axios.get(path)
+                    .then(response => {
+                        // 请求成功的处理逻辑
+                        console.log("获取班级成绩综合信息", response);
+                        this.classGradeData = response.data;
+                    })
+                    .catch(error => {
+                        // 请求失败的处理逻辑
+                        console.error(error);
+                    });
+            },
+            IsChecked: function (account) {
+                var path = '/api/Message/checked?id=' + account
+                axios.get(path)
+                    .then(response => vue.changeImage(response.data))
+                    .catch(e => this.$message.error(e.response.data))
+
+
+            },
+            changeImage: function (b) {
+                if (b == false) {
+                    this.ImageSrc = "./file/unchecked_message.png"
+                }
+            },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => { });
+            },
+            beforeUpload(file) {
+                const isExcel = file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+                if (!isExcel) {
+                    this.$message.error('只能上传 Excel 文件！');
+                }
+                return isExcel;
+            },
+            handleUploadSuccess(response) {
+                console.log(response);
+                this.uploading = false;
+                /*
+                if (response === '导入成功') {
+                    this.$message.success('上传成功');
+                } else {
+                    this.$message.error('上传失败');
+                }*/
+            },
+            submitUpload() {
+                this.$refs.uploadRef.submit();
+
+                this.$message.success('导入成功');
+                this.uploading = true;
+
+            }
+        }
+    });
+    vue.getParams();
+</script>
+</html>

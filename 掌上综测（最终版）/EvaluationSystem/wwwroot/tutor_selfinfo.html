@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <title>辅导员个人信息</title>
+    <!--引入 element-ui 的样式，-->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 必须先引入vue，  后使用element-ui -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- 引入element 的组件库-->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <style>
+        /*dfy：新的页面可以复制style里面的*/
+        .top {
+            border: #797979;
+            background-color: #C5CFC4;
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin:auto;
+        }
+        .title {
+            display: flex;
+            align-items: center;
+        }
+        h3 {
+            margin: auto;
+            margin-left: 20px;
+            color: #797979;
+        }
+
+        .el-menu .el-menu-item:hover {
+            outline: 0 !important;
+            color: #fff !important;
+            background: #899C88 !important;
+        }
+
+        .el-menu .el-menu-item.is-active {
+            color: #fff !important;
+            background: #899C88 !important;
+        }
+        .blank {
+            position: relative;
+            width: 78%;
+        }
+
+        .self {
+            display: flex;
+            align-items: center;
+        }
+
+        .avatar {
+            border-radius: 50%;
+            height: 50px;
+            margin: 10px;
+        }
+
+        .name {
+            color: #797979;
+        }
+
+        .message {
+            width: 20px;
+            margin: auto;
+            margin-left: 15px;
+        }
+
+        .left {
+            width: 233px !important;
+            background-color: #E6E6E6;
+            height: 100vh;
+        }
+
+        /*------------这里之前的style都是导航栏相关的，如果要用需要复制------------------*/
+
+        .el-button--success {
+            border-color: #899C88 !important;
+            background: #899C88 !important;
+        }
+
+            .el-button--success:hover {
+                background: #899C88 !important;
+                border-color: #899C88 !important;
+                color: #FFF !important;
+                opacity: 0.8;
+            }
+
+        .stu_mark {
+            left: 0px;
+            top: 80px;
+            width: 241px;
+            height: 50px;
+        }
+
+        .center {
+            background-color: #F2F2F2;
+        }
+
+        .center_top {
+            margin: 15px;
+            padding-left: 20px;
+            padding-right: 20px;
+            display: flex;
+            align-items: center;
+           justify-content: space-between;
+            background-color: #FFFFFF;
+            border: #797979;
+            border-radius: 5px;
+        }
+        .el-card {
+            margin: 15px;
+        }
+
+        .center_middle {
+            display: flex;
+            align-items: center;
+        }
+        .bigAvatar {
+            height: 270px;
+            border-radius: 50%;
+            margin:30px;
+        }
+        span{
+        }
+       
+        a {
+            text-decoration: none;
+        }
+
+        div.stu_mark:hover {
+            background-color: #899C88;
+        }
+
+        .btn {
+            transform: scale(1);
+        }
+
+            .btn:active {
+                transform: scale(0.97);
+            }
+        .info-left {
+            margin-left: 40px;
+        }
+      
+
+    </style>
+</head>
+<body>
+    <div id="tutorinfoPage">
+
+        <el-container class="container">
+            <el-header class="top" height="70px">
+                <div class="title" width="250px">
+                    <img src="./file/logo.png" class="logo">
+                    <h3>掌上综测</h3>
+                </div>
+                <div class="blank"></div>
+                <div class="self">
+                    <a v-bind:href="['tutor_selfinfo.html?account='+user.userId]">
+                        <img src="./file/photo.jpg" alt="photo" class="avatar">
+                    </a>
+                    <p class="name">{{user.name}}</p>
+                    <a v-bind:href="['tutor_message.html?account='+user.userId]">
+                        <img :src="ImageSrc" alt="message" class="message">
+                    </a>
+                </div>
+            </el-header>
+            <el-container>
+                <el-aside class="left">
+                    <el-row>
+                        <el-col>
+                            <el-menu default-active="4"
+                                     class="el-menu-vertical-demo"
+                                     background-color="#E6E6E6"
+                                     active-text-color="#fff">  
+                                <el-menu-item index="1" @click="routeTo('tutor_stugrade')">
+                                    <span slot="title">学生成绩</span>
+                                </el-menu-item>
+                                <el-menu-item index="2" @click="routeTo('tutor_extrabenefits')">
+                                    <span slot="title">加分申请</span>
+                                </el-menu-item>
+                                <el-menu-item index="3" @click="routeTo('tutor_comeva')">
+                                    <span slot="title">综测管理</span>
+                                </el-menu-item>
+                                <el-menu-item index="4" @click="routeTo('tutor_selfinfo')">
+                                    <span slot="title">个人信息</span>
+                                </el-menu-item>
+                            </el-menu>
+                        </el-col>
+                    </el-row>
+                </el-aside>
+                
+                <el-main class="center">
+                    <div>
+                        <div class="center_top">
+                            <h1>个人信息</h1>
+                            <el-button type="success" 
+                                       size="mini" 
+                                       onclick="javascript:location.reload()"
+                                       class="updatebtn">
+                            刷新</el-button>
+                        </div>
+
+                        <el-card>
+                            <div class="center_middle">
+                                <img src="./file/photo.jpg" alt="photo" class="bigAvatar">
+                                <div class="info-left">
+                                    <h1>姓名：{{user.name}}</h1>
+                                    <span>辅导的学院:&nbsp;{{tutor.academy}}</span>
+                                    <br><br>
+                                    <span>辅导的专业:&nbsp;{{tutor.major}}</span>
+                                    <br><br>
+                                    <span>辅导的年级:&nbsp;{{tutor.grade}}</span>
+                                    <br><br>
+                                    <span>性别:&nbsp;{{user.sex}}</span>
+                                </div>
+                                <el-button type="success" @click="quitLogin"  style="position:relative;top:-75px;left:70px;">退出登录</el-button>
+                            </div>
+                        </el-card>
+                    </div>
+                </el-main>
+            </el-container>
+        </el-container>
+        
+
+        
+    </div>
+       
+
+        
+</body>
+<script>
+    var vue=new Vue({
+        el:'#tutorinfoPage',
+        data:{
+            tutor: {},
+            account:"",
+            user: {},
+            ImageSrc: "./file/checked_message.png"
+
+        },
+        created() {
+            this.initialCreate();
+        },
+
+        methods: {
+            //导航栏相关跳转，需要复制
+            routeTo: function (path) {
+                this.initialCreate();
+                var fullpath = path + ".html?account=" + this.tutor.userId;
+                window.location.href = fullpath;
+            },
+            initialCreate: function () {
+                var url = location.search
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for (var i = 0; i < strs.length; i++) {
+                        theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                    }
+                }
+                this.tutor = { userId: theRequest.account };
+            },
+             //----------------------
+
+            getParams: function () {
+                vue.getInfo(this.tutor.userId);
+                vue.getUser(this.tutor.userId);
+                vue.IsChecked(this.tutor.userId);
+
+            },
+           
+            getInfo:function(account){
+                var path = '/api/User/tutor';
+                if(account!=null)path=path+'?id='+account;
+                axios.get(path)
+                .then(response=>this.tutor=response.data)
+                .catch(e=>this.$message.error(e.response.data))
+                
+            },
+            getUser:function(account){
+                var path='/api/User/'+account
+                axios.get(path)
+                .then(response=>this.user=response.data)
+                .catch(e=>this.$message.error(e.response.data))
+            },
+            jump:function(){
+                window.location.href = '/tutor_stuinfo.html?'+'account='+this.user.userId
+                
+            },
+            quitLogin: function () {
+                window.location.href = 'index.html';
+            },
+            IsChecked: function (account) {
+                var path = '/api/Message/checked?id=' + account
+                axios.get(path)
+                    .then(response => vue.changeImage(response.data))
+                    .catch(e => this.$message.error(e.response.data))
+
+
+            },
+            changeImage: function (b) {
+                if (b == false) {
+                    this.ImageSrc = "./file/unchecked_message.png"
+                }
+            }
+            
+           
+        }
+    
+
+    })
+    vue.getParams();
+</script>
+</html>

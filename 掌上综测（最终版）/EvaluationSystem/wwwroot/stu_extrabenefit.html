@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <title>我的加分</title>
+    <!--引入 element-ui 的样式，-->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 必须先引入vue，  后使用element-ui -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- 引入element 的组件库-->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <style>
+        /*dfy：新的页面可以复制style里面的*/
+        
+        .top {
+            border: #797979;
+            background-color: #C5CFC4;
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin:auto;
+        }
+        .title {
+            display: flex;
+            align-items: center;
+        }
+        h3 {
+            margin: auto;
+            margin-left: 20px;
+            color: #797979;
+        }
+
+        .el-menu .el-menu-item:hover {
+            outline: 0 !important;
+            color: #fff !important;
+            background: #899C88 !important;
+        }
+
+        .el-menu .el-menu-item.is-active {
+            color: #fff !important;
+            background: #899C88 !important;
+        }
+        .blank {
+            position: relative;
+            width: 78%;
+        }
+
+        .self {
+            display: flex;
+            align-items: center;
+        }
+
+        .avatar {
+            border-radius: 50%;
+            height: 50px;
+            margin: 10px;
+        }
+
+        .name {
+            color: #797979;
+        }
+
+        .message {
+            width: 20px;
+            margin: auto;
+            margin-left: 15px;
+        }
+
+        .left {
+            width: 233px !important;
+            background-color: #E6E6E6;
+            height: 100vh;
+        }
+
+        /*------------这里之前的style都是导航栏相关的，如果要用需要复制------------------*/
+
+        .el-button--success {
+            border-color: #899C88 !important;
+            background: #899C88 !important;
+        }
+
+            .el-button--success:hover {
+                background: #899C88 !important;
+                border-color: #899C88 !important;
+                color: #FFF !important;
+                opacity: 0.8;
+            }
+
+      
+
+        .center {
+            background-color: #F2F2F2;
+        }
+
+        .center_top {
+            margin: 15px;
+            padding-left: 20px;
+            padding-right: 20px;
+            display: flex;
+            align-items: center;
+           justify-content: space-between;
+            background-color: #FFFFFF;
+            border: #797979;
+            border-radius: 5px;
+        }
+      
+
+        .center_middle {
+            margin: 15px;
+            padding-left: 20px;
+            padding-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            display: flex;
+            align-items: center;
+            background-color: #FFFFFF;
+            border: #797979;
+            border-radius: 5px;
+        }
+      
+        .btn {
+            transform: scale(1);
+        }
+
+            .btn:active {
+                transform: scale(0.97);
+            }
+        .info-left {
+            margin-left: 40px;
+        }
+        .info-right {
+            padding-top:40px;
+            margin-left:200px;
+        }
+        .el-card {
+            margin: 15px;
+            padding-left: 20px;
+        }
+        .table {
+            border: 1px solid #c1c1c1;
+            border-radius: 5px;
+            padding:20px;
+            margin:10px;
+        }
+        .query {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="stu_benefitPage">
+
+
+        <el-container class="container">
+            <el-header class="top" height="70px">
+                <div class="title" width="250px">
+                    <img src="./file/logo.png" class="logo">
+                    <h3>掌上综测</h3>
+                </div>
+                <div class="blank"></div>
+                <div class="self">
+                    <a v-bind:href="['stu_selfinfo.html?account='+user.userId]">
+                        <img src="./file/photo.jpg" alt="photo" class="avatar">
+                    </a>
+                    <p class="name">{{user.name}}</p>
+                    <a v-bind:href="['stu_message.html?account='+user.userId]">
+                        <img :src="ImageSrc" alt="message" class="message">
+                    </a>
+                </div>
+            </el-header>
+            <el-container>
+                <el-aside class ="left" >
+                    <el-row >
+                        <el-col>
+                            <el-menu default-active="2"
+                                     class="el-menu-vertical-demo"
+                                     background-color="#E6E6E6"
+                                     active-text-color="#fff">
+
+                                <el-menu-item index="1" @click="routeTo('stu_mark')">
+                                    <span slot="title">成绩信息</span>
+                                </el-menu-item>
+                                <el-menu-item index="2" @click="routeTo('stu_extrabenefit')">
+                                    <span slot="title">我的加分</span>
+                                </el-menu-item>
+                                <el-menu-item index="3" @click="routeTo('stu_eva')">
+                                    <span slot="title">综测管理</span>
+                                </el-menu-item>
+                                <el-menu-item index="4" @click="routeTo('stu_selfinfo')">
+                                    <span slot="title">个人信息</span>
+                                </el-menu-item>
+                            </el-menu>
+                        </el-col>
+                    </el-row>
+                </el-aside>
+                
+                <el-main class="center">
+                    <div>
+                        <div class="center_top">
+                            <h1>学生额外加分</h1>
+                            <el-button type="success" 
+                                       size="mini" 
+                                       onclick="javascript:location.reload()"
+                                       class="updatebtn">
+                            刷新</el-button>
+                        </div>
+                        <el-card>
+                            
+                            <div class="query">
+                                <div class="type">
+                                    <!-- <span style="margin-right:10px">类型： </span> -->
+                                    <el-select v-model="type" name="types" id="types" placeholder="请输入加分类型">
+                            
+                                        <el-option label="全部" value="all"></el-option>
+                                        <el-option label="发表学术论文及文学、艺术、新闻等作品(C1)" value="C1"></el-option>
+                                        <el-option label="科技发明与大学生科研(C2)" value="C2"></el-option>
+                                        <el-option label="学科竞赛与文体竞赛(C3)" value="C3"></el-option>
+                                        <el-option label="社会活动与社会时间(C4)" value="C4"></el-option>
+                                        <el-option label="资格认证及创业(C5)" value="C5"></el-option>
+                                    </el-select>
+                                </div>
+                                <div class="status">
+                                    <!-- <span style="margin-right:10px">状态： </span> -->
+                                    <el-select v-model="status" name="status" id="status" placeholder="请输入加分项状态">
+                                        <el-option label="全部" value="all"></el-option>
+                                        <el-option label="待审核" value="待审核"></el-option>
+                                        <el-option label="已通过" value="已通过"></el-option>
+                                        <el-option label="已驳回" value="已驳回"></el-option>
+                                    </el-select>
+                                </div>
+                                <div class="theme">
+                                    <!-- <span style="margin-right:10px">加分主题： </span> -->
+                                    <el-input v-model="theme" placeholder="请输入加分主题"></el-input>                          
+                                </div>
+                                <el-button @click="queryBenefits"style="padding: 5px 20px; margin: 5px 10px;background-color: #899C88;color: #E6E6E6;height:35px;width:67px;">
+                                    查询
+                                </el-button>
+                                
+                               
+                               
+                               
+                                
+                            </div>
+                            <div class="buttons">
+                                <el-button class="btn" @click="jump_rules" style="height: 35px;background-color: #C5CFC4;border: #899C88;">查看详细申请加分规则</el-button>
+                                <el-button class="btn" @click="showEdit" style="width:94px;height:35px;background-color: #899C88;border:#C5CFC4;color: #E6E6E6;">申请加分</el-button>
+                                <el-button class="btn" @click="showSelect" style="width: 144px;height:35px;background-color: #899C88;border: #E6E6E6;color: #E6E6E6;">选择加分项到综测</el-button>
+                            </div>
+                            <div v-if="showMode!=true" style="color: #797979;">
+                                *此处只显示本学期已通过审核的加分项
+                            </div>
+                            <div class="table">
+                                <el-table @selection-change="handleSelectionChange" :data="benefits" :fit="true" :show-header="true">
+                                   
+                                    <el-table-column prop="benefitTheme" label="加分主题" >
+                                    </el-table-column>
+                                    <el-table-column prop="benefitType" label="加分类型" >
+                                    </el-table-column>
+                                    <el-table-column prop="benefitPoint" label="奖励分数">
+                                    </el-table-column>
+                                    <el-table-column prop="benefitTime" label="奖项时间">
+                                    </el-table-column>
+                                    <el-table-column prop="benefitStatus" label="状态" v-if="showMode">
+                                    </el-table-column>
+                                    <el-table-column 
+                                    type="selection" 
+                                    width="55" 
+                                    >
+                                    </el-table-column>
+                                    
+                                   
+                            
+                    
+                                </el-table>
+                                <button class="btn" v-if="showMode!=true" @click="input" style="position: absolute;left:1000px;top:300px;width: 125px;height: 35px;background-color: #899C88;border: #C5CFC4;border-radius: 5px;color: #E6E6E6;"> 确认导入综测</button>
+                            </div>  
+                        </el-card>
+                        <div class="dialog1">
+                            <el-dialog title="申请加分" :visible.async="dialogVisible" width="70%" @close="dialogVisible=false">
+                                <el-form label-width="100px" label-position="left">
+                                    <el-form-item label="加分主题：">
+                                       <el-input type="text" v-model.text="currentBenefit.benefitTheme" placeholder="请输入加分主题">
+                                       </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="加分类型：">
+                                        <el-select v-model="currentBenefit.benefitType" name="types" id="types" >
+                                            
+                                            <el-option label="发表学术论文及文学、艺术、新闻等作品(C1)" value="C1"></el-option>
+                                            <el-option label="科技发明与大学生科研(C2)" value="C2"></el-option>
+                                            <el-option label="学科竞赛与文体竞赛(C3)" value="C3"></el-option>
+                                            <el-option label="社会活动与社会时间(C4)" value="C4"></el-option>
+                                            <el-option label="资格认证及创业(C5)" value="C5"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="奖励分数：">
+                                        <el-input type="text" v-model.text="currentBenefit.benefitPoint" placeholder="请输入奖励分数">
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="奖项时间：">
+                                        <el-input type="text" v-model.text="currentBenefit.benefitTime" placeholder="请输入奖项时间">
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="证明材料：">
+                                        <input type="file" @change="handleFileUpload" accept="image/*">
+                                        <br>
+                                        *此处只能上传一张图片
+                                        <!-- <button class="btn" @click="showUpload" style="background-color: #899C88;color: #E6E6E6; width: 50px;height: 30px;border: #E6E6E6;border-radius: 5px;">上传</button> -->
+                                    </el-form-item>
+                                    <el-form-item label="备注：">
+                                        {{this.currentBenefit.StuId}}
+                                        <el-input type="text" v-model.text="currentBenefit.benefitNote" placeholder="请输入备注">
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item style="text-align: right;">
+                                        <el-button @click="dialogVisible=false" style="background-color: #E6E6E6;border:#797979;" >取 消</el-button>
+                                        <el-button  @click="addbenefit" style="background-color:#899C88;border-radius: 5px;">确 定</el-button>
+                                        
+                                    </el-form-item>
+                                </el-form>
+                            </el-dialog>
+                    
+                        </div>
+                        <div class="dialog2">
+                            <el-dialog title="导入确认" :visible.async="confirmVisible" width="50%" @close="dialogVisible=false">
+                                <el-form label-width="100px" label-position="left" style="text-align: center;">
+                                  确认导入这些项进入综测表吗？
+                                    <el-form-item style="text-align: right;">
+                                        
+                                        <el-button @click="confirmVisible=false" style="background-color: #E6E6E6;border:#797979;" >取 消</el-button>
+                                        <el-button @click="confirmInput" style="background-color:#899C88;border-radius: 5px;">确 定</el-button>
+                                        
+                                    </el-form-item>
+                                </el-form>
+                            </el-dialog>
+                        </div>
+                    </div>
+
+                </el-main>
+            </el-container>
+        </el-container>
+        
+
+        
+    </div>
+       
+
+        
+</body>
+<script>
+    var vue=new Vue({
+       el:'#stu_benefitPage',
+       data:{
+           student: {},
+           user:{},
+           benefits:[],
+           extrabenefit: {},
+           comeva: [],
+           type:"",
+           status:"",
+           theme:"",
+          
+           dialogVisible:false,
+           showMode:true,
+           selectMode:false,
+           confirmVisible:false,
+       
+           currentBenefit:{"benefitStatus":"待审核","isValidForThisSemester":true,"stuId":"","benefitNote":"暂无","tutorId":"","studentName":"","updateTime":""},
+           tableData:[],
+           fileList: [],
+           selectedRows: [],
+           message: {},
+           ImageSrc: "./file/checked_message.png"
+
+            
+          
+           
+       },
+       created() {
+            this.initialCreate();
+        },
+     
+      
+       methods: {
+          handleSelectionChange(selection) {
+                this.selectedRows = selection;
+            },
+          //导航栏相关跳转，需要复制
+          routeTo: function (path) {
+                this.initialCreate();
+                var fullpath = path + ".html?account=" + this.student.userId;
+                window.location.href = fullpath;
+            },
+            initialCreate: function () {
+                var url = location.search
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for (var i = 0; i < strs.length; i++) {
+                        theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                    }
+                }
+                this.student = { userId: theRequest.account };
+            },
+             //----------------------
+
+            getParams: function () {
+                vue.getInfo(this.student.userId);
+                vue.getUser(this.student.userId);
+                vue.IsChecked(this.student.userId);
+                vue.queryBenefits();
+            },
+           
+            getInfo:function(account){
+                var path = '/api/User/stu';
+                if(account!=null)path=path+'?id='+account;
+                axios.get(path)
+                .then(response=>this.student=response.data)
+                .catch(e=>this.$message.error(e.response.data))
+                
+            },
+            getUser:function(account){
+                var path='/api/User/'+account
+                axios.get(path)
+                .then(response=>this.user=response.data)
+                .catch(e=>this.$message.error(e.response.data))
+            },
+            jump:function(){
+                window.location.href = '/stu_selfinfo.html?'+'account='+this.user.userId
+                
+            },
+           
+           
+            handleFileUpload(event) {
+            this.selectedFile = event.target.files[0];
+            vue.convertToBase64();
+            },
+            convertToBase64() {
+            if (this.selectedFile) {
+                const reader = new FileReader();
+                reader.readAsDataURL(this.selectedFile);
+                reader.onload = () => {
+                this.currentBenefit.proofFile = reader.result;
+                };
+                reader.onerror = (error) => {
+                console.error('Error converting image to Base64:', error);
+                };
+            }
+            },
+       
+           input:function()
+           {
+              
+               this.confirmVisible=true;
+           },
+            confirmInput:function()
+            {
+               
+               
+
+                this.confirmVisible=false;
+                var path = '/api/ComEva/stuId/extrabenefit?StudentId=' + this.student.userId + "&grade=" + encodeURI(this.student.grade)
+
+                axios.put(path, this.selectedRows)
+                
+               
+               window.location.href = '/stu_eva.html?'+'account='+this.user.userId
+            },
+           addbenefit:function()
+           {
+
+               //获得comeva
+               var path = '/api/ComEva/StudentId?StudentId=' + this.student.userId + "&grade=" + this.student.grade
+               axios.get(path)
+                   .then(response => { this.comeva = response.data; this.currentBenefit.comeva = response[0] })
+                   .catch(e => this.$message.error = response.data);
+
+               var path='/api/ExtraBenefit'
+               
+               this.currentBenefit.stuId=this.user.userId
+               this.currentBenefit.studentName=this.user.name
+               this.currentBenefit.tutorId=this.student.tutorId
+               var time=new Date().toISOString();
+               var index=time.indexOf('T')
+               
+               this.currentBenefit.updateTime=time.slice(0,index)
+               axios.post(path, this.currentBenefit)
+               .then(response => {
+                   // 请求成功的处理逻辑
+                   console.log(response.data);
+               })
+               .catch(error => {
+                   // 请求失败的处理逻辑
+                   console.error(error);
+               });
+
+               //发送消息
+               this.message.senderID=this.user.userId
+               this.message.receiverID=this.student.tutorId
+               this.message.senderName=this.user.name
+               this.message.content="学生"+this.user.name+"申请加分！加分主题为："+this.currentBenefit.benefitTheme    
+               var time=new Date().toISOString();
+               var index=time.indexOf('T')
+               this.message.time=time.slice(0,index)
+               var path='/api/Message'
+                axios.post(path,this.message)
+                .then(response => {
+                    // 请求成功的处理逻辑
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    // 请求失败的处理逻辑
+                    console.error(error);
+                });
+
+               this.currentBenefit.benefitTheme = ""
+               this.currentBenefit.benefitType = ""
+               this.currentBenefit.benefitPoint = ""
+               this.currentBenefit.benefitTime = ""
+               this.currentBenefit.proofFile = ""
+               this.currentBenefit.benefitNote="暂无"
+
+
+
+               // vue.getAllBenefits(this.student.userId)
+               this.dialogVisible=false
+
+           },
+          
+
+           jump_rules:function(){
+               window.location.href = '/extrabenefit_rule.html?'+'account='+this.user.userId
+           },
+           // onUpload:function(){
+           //     let formData=new FormData()
+           //     formData.append('file',file.file)
+           //     postUpload(formData).then((res)=>{
+           //         console.log(res)
+           //         this.$message.success(this.$t('UPLOAD_SUCCESS'))
+           //     }).catch((e)=>{
+           //         this.$message.error(e.message)
+           //     })
+           // },
+           // showUpload:function(){
+           //     this.uploadMode=true;
+           // },
+           showEdit:function(){
+               this.dialogVisible = true
+               // this.editMode=true;
+               // this.currentTodo = Object.assign({},todo)
+           },
+           showSelect:function()
+           {
+               this.selectMode=true
+               this.showMode=false
+               vue.queryBenefitsByStatus();
+               
+           },
+           handleChange:function(file, fileList) { //文件数量改变
+                   this.fileList = fileList;
+               },
+         
+
+          
+           queryBenefitsByStatus:function()
+           {
+               var path = '/api/ExtraBenefit/query?id=' + this.student.userId;
+               var estatus=encodeURI("已通过");
+               path=path+"&status="+estatus;
+               axios.get(path)
+               .then(response=>this.benefits=response.data)
+               .catch(e=>this.$message.error(e.response.data));
+           },
+           saveBenefit:function(){
+
+           },
+           queryBenefits: function () {
+               var path = '/api/ExtraBenefit/query?id=' + this.student.userId;
+               if(this.theme!="")
+               {
+                   if(this.status!="all"&&this.status!="")
+                   {
+                       if(this.type!="all"&&this.type!="")
+                       {
+                           path=path+"&type="+this.type;
+                       }
+                       var estatus=encodeURIComponent(this.status)
+                       path=path+"&status="+estatus;
+                   }
+                   else
+                   {
+                       if(this.type!="all"&&this.type!="")
+                       {
+                           path=path+"&type="+this.type;
+                       }
+                   }
+                   var etheme=encodeURIComponent(this.theme);
+                   path=path+"&Btheme="+etheme;
+               }
+               else
+               {
+                   if(this.status!="all"&&this.status!="")
+                   {
+                       if(this.type!="all"&&this.type!="")
+                       {
+                           path=path+"&type="+this.type;
+                       }
+                       var estatus=encodeURIComponent(this.status)
+                       path=path+"&status="+estatus;
+                   }
+                   else
+                   {
+                       if(this.type!="all"&&this.type!="")
+                       {
+                           path=path+"&type="+this.type;
+                       }
+                   }
+               }
+              
+               axios.get(path)
+               .then(response=>this.benefits=response.data)
+               .catch(e=>this.$message.error(e.response.data));
+            
+           },
+           getAllBenefits:function(account){
+               var path='/api/ExtraBenefit/'+account;
+               axios.get(path)
+               .then(response=>this.benefits=response.data)
+               .catch(e=>this.$message.error(e.response.data))
+           },
+           IsChecked: function (account) {
+               var path = '/api/Message/checked?id=' + account
+               axios.get(path)
+                   .then(response =>vue.changeImage(response.data))
+                   .catch(e => this.$message.error(e.response.data))
+
+              
+           },
+           changeImage:function(b){
+            if(b==false)
+            {
+                this.ImageSrc="./file/unchecked_message.png"
+            }
+           }
+           
+          
+       }
+   
+
+   })
+   vue.getParams();
+   
+   
+   
+
+</script>
+</html>
